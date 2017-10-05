@@ -1,0 +1,15 @@
+flagrow-linguist:
+    admin:
+        buttons:
+            add-string: Add string
+            save-string: Save string
+            delete-string: Delete string
+        menu:
+            description: >
+                Customize translations.
+        strings:
+            key: Translation key
+            locale: Locale
+            value: Value
+        locales:
+            all: All

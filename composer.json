@@ -1,0 +1,42 @@
+{
+    "name": "flagrow/linguist",
+    "description": "Customize translations",
+    "keywords": [
+        "extension",
+        "flarum",
+        "flagrow",
+        "locale",
+        "translation"
+    ],
+    "type": "flarum-extension",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "Clark Winkelmann",
+            "email": "clark.winkelmann@gmail.com",
+            "homepage": "https://clarkwinkelmann.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/flagrow/linguist/issues",
+        "source": "https://github.com/flagrow/linguist"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.7"
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "Flagrow Linguist",
+            "icon": {
+                "name": "italic",
+                "backgroundColor": "#f4f4f4",
+                "color": "#5f4bb6"
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Flagrow\\Linguist\\": "src/"
+        }
+    }
+}
