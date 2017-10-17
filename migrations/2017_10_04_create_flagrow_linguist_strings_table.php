@@ -7,7 +7,7 @@ return [
     'up' => function (Builder $schema) {
         $schema->create('flagrow_linguist_strings', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('key')->index();
+            $table->string('key', 180)->index();
             $table->string('locale', 10)->nullable()->index();
             $table->text('value');
             $table->timestamps();
