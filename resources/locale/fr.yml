@@ -1,0 +1,15 @@
+flagrow-linguist:
+    admin:
+        buttons:
+            add-string: Ajouter une chaîne
+            save-string: Enregistrer la chaîne
+            delete-string: Supprimer la chaîne
+        menu:
+            description: >
+                Personnaliser les traductions.
+        strings:
+            key: Clé de traduction
+            locale: Locale
+            value: Valeur
+        locales:
+            all: Tout
