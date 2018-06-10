@@ -37,9 +37,9 @@ class AddApiRoutes
         );
 
         $routes->get(
-            '/flagrow/linguist/default-strings',
-            'flagrow.linguist.api.default-strings.index',
-            Controllers\DefaultStringIndexController::class
+            '/flagrow/linguist/string-keys',
+            'flagrow.linguist.api.string-keys.index',
+            Controllers\StringKeyIndexController::class
         );
     }
 }

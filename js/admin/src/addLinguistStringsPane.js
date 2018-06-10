@@ -19,7 +19,7 @@ export default function () {
         items.add('flagrow-linguist-strings', AdminLinkButton.component({
             href: app.route('flagrow-linguist-strings'),
             icon: 'italic',
-            children: 'Linguist',
+            children: app.translator.trans('flagrow-linguist.admin.menu.title'),
             description: app.translator.trans('flagrow-linguist.admin.menu.description'),
         }));
     });

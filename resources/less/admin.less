@@ -1,27 +1,105 @@
-.Flagrow-Linguist-Strings {
-    td {
-        padding: 5px 10px;
-    }
+.Flagrow-Linguist-Filters {
+    display: flex;
+    padding-top: 10px;
 }
 
-.Flagrow-Linguist-Autocomplete {
+.Flagrow-Linguist-Filters .Button {
+    margin-left: 10px;
+}
+
+.Flagrow-Linguist-Filter--Selected {
+    // Use our own class to have both an icon and use the color of the primary button
+    .Button--color(@body-bg, @primary-color);
+}
+
+.Flagrow-Linguist-Filters .Dropdown-menu {
+    max-height: 40em;
+    overflow-y: auto;
+}
+
+.Flagrow-Linguist-Key {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.Flagrow-Linguist-Key-Code {
+    padding: 10px 20px;
+}
+
+.Flagrow-Linguist-Locale {
+    display: flex;
+}
+
+.Flagrow-Linguist-Label,
+.Flagrow-Linguist-Field,
+.Flagrow-Linguist-Controls {
+    padding: 10px 20px;
+}
+
+.Flagrow-Linguist-Label {
+    min-width: 12em;
+}
+
+.Flagrow-Linguist-Field {
+    flex-grow: 1;
+}
+
+.Flagrow-Linguist-Feld-Wrap {
     position: relative;
 }
 
-.Flagrow-Linguist-Autocomplete--list {
-    position: absolute;
-    z-index: 1000;
-    top: 100%;
-    left: 0;
-    background: white;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    min-width: 50em;
+.Flagrow-Linguist-Input {
+    padding-top: 1.3em; // Place for the placeholder to go
+    height: auto; // Cancel Flarum fixed height
+}
 
-    li {
-        padding: 0.3em;
-        border-bottom: 1px solid #aaa;
+.Flagrow-Linguist-Highlight {
+    background: rgba(251, 240, 23, 0.5);
+}
+
+.Flagrow-Linguist-Placeholder {
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 13px 0; // Same horizontal padding as Flarum .FormControl
+    transition: 0.2s transform;
+    font-size: 1.2em;
+    transform-origin: 0 0;
+    transform: translate(0) scale(1);
+    pointer-events: none; // Don't block access to the input
+    color: #aaa;
+
+    // Elipsis
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.Flagrow-Linguist-Placeholder-Hint {
+    display: none; // Will be shown under special cases
+    color: #aaa;
+}
+
+.Flagrow-Linguist-Input:focus + .Flagrow-Linguist-Placeholder,
+.Flagrow-Linguist-Field--with-value .Flagrow-Linguist-Placeholder {
+    transform: translate(4px, -6px) scale(0.75);
+
+    .Flagrow-Linguist-Placeholder-Hint {
+        display: inline-block;
     }
+}
+
+.Flagrow-Linguist-Field--with-value .FormControl {
+    border-color: #30ba1c;
+}
+
+.Flagrow-Linguist-Field--with-original-string .Flagrow-Linguist-Placeholder {
+    color: #333;
+}
+
+.Flagrow-Linguist-Results {
+    padding: 20px 0;
 }

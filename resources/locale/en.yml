@@ -1,15 +1,23 @@
 flagrow-linguist:
     admin:
-        buttons:
-            add-string: Add string
-            save-string: Save string
-            delete-string: Delete string
         menu:
-            description: >
-                Customize translations.
-        strings:
-            key: Translation key
-            locale: Locale
-            value: Value
+            title: Linguist
+            description: Customize translations.
+        buttons:
+            apply: Apply
+            reset: Restore original
+            copy-original: Copy original text
+            load-more: Load more
         locales:
             all: All
+        placeholder:
+            not-translated: Not translated
+            all-locales: A text defined here will be shown in all languages
+            hint: Original value:
+        filters:
+            search: Search translation strings...
+            with-own-translations: My translations
+            with-original-translations-in-locales: With original translations in
+            without-original-translations-in-locales: Without original translations in
+            for-extension: For extension
+            results: Showing {shown} of {total} matching translations

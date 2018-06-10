@@ -3,6 +3,7 @@
 namespace Flagrow\Linguist\Listeners;
 
 use Flagrow\Linguist\StringLoader;
+use Flagrow\Linguist\TranslationLock;
 use Flarum\Event\ConfigureLocales;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -17,6 +18,11 @@ class LoadStrings
 
     public function addLocales(ConfigureLocales $event)
     {
+        // Prevent loading translations while we're trying to get the defaults
+        if (!TranslationLock::shouldLoadTranslations()) {
+            return;
+        }
+
         $translator = $event->locales->getTranslator();
 
         $translator->addLoader('flagrow_linguist', app(StringLoader::class));
