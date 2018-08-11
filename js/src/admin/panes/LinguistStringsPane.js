@@ -1,10 +1,10 @@
 import app from 'flarum/app';
 import Component from 'flarum/Component';
-import StringKey from 'flagrow/linguist/components/StringKey';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
-import localesAsArray from 'flagrow/linguist/utils/localesAsArray';
 import ExtensionsPage from 'flarum/components/ExtensionsPage';
+import localesAsArray from '../utils/localesAsArray';
+import StringKey from '../components/StringKey';
 
 const RESULTS_PER_PAGE = 20;
 
@@ -70,7 +70,7 @@ export default class LinguistStringsPane extends Component {
                 }),
                 Button.component({
                     className: 'Button' + (this.filters.withOwnTranslations ? ' Flagrow-Linguist-Filter--Selected' : ''),
-                    icon: this.filters.withOwnTranslations ? 'check-square-o' : 'square-o',
+                    icon: `far fa-${this.filters.withOwnTranslations ? 'check-square' : 'square'}`,
                     onclick: () => {
                         this.filters.withOwnTranslations = !this.filters.withOwnTranslations;
                         this.applyFilters();
@@ -82,7 +82,7 @@ export default class LinguistStringsPane extends Component {
                 }, this.enabledExtensions.map(
                     extension => Button.component({
                         className: 'Button',
-                        icon: this.filters.forExtension === extension.id ? 'check-square-o' : 'square-o',
+                        icon: `far fa-${this.filters.forExtension === extension.id ? 'check-square' : 'square'}`,
                         onclick: () => {
                             if (this.filters.forExtension === extension.id) {
                                 this.filters.forExtension = null;
@@ -100,7 +100,7 @@ export default class LinguistStringsPane extends Component {
                 }, localesAsArray().map(
                     locale => Button.component({
                         className: 'Button',
-                        icon: this.filters.withoutOriginalTranslationsInLocales.indexOf(locale.key) !== -1 ? 'check-square-o' : 'square-o',
+                        icon: `far fa-${this.filters.withoutOriginalTranslationsInLocales.includes(locale.key) ? 'check-square' : 'square'}`,
                         onclick: () => {
                             if (this.filters.withoutOriginalTranslationsInLocales.indexOf(locale.key) !== -1) {
                                 this.filters.withoutOriginalTranslationsInLocales = this.filters.withoutOriginalTranslationsInLocales.filter(
@@ -120,7 +120,7 @@ export default class LinguistStringsPane extends Component {
                 }, localesAsArray().map(
                     locale => Button.component({
                         className: 'Button',
-                        icon: this.filters.withOriginalTranslationsInLocales.indexOf(locale.key) !== -1 ? 'check-square-o' : 'square-o',
+                        icon: `far fa-${this.filters.withOriginalTranslationsInLocales.includes(locale.key) ? 'check-square' : 'square'}`,
                         onclick: () => {
                             if (this.filters.withOriginalTranslationsInLocales.indexOf(locale.key) !== -1) {
                                 this.filters.withOriginalTranslationsInLocales = this.filters.withOriginalTranslationsInLocales.filter(

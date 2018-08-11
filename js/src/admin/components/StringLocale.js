@@ -2,7 +2,7 @@ import app from 'flarum/app';
 import Component from 'flarum/Component';
 import ItemList from 'flarum/utils/ItemList';
 import Button from 'flarum/components/Button';
-import highlightMithril from 'flagrow/linguist/utils/highlightMithril';
+import highlightMithril from '../utils/highlightMithril';
 
 export default class StringLocale extends Component {
     init() {
@@ -128,6 +128,8 @@ export default class StringLocale extends Component {
         }
 
         this.string.data.attributes.value = this.value;
+
+        if (!this.string.locale()) delete this.string.data.attributes.locale;
 
         this.processing = true;
 

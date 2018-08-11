@@ -4,12 +4,12 @@ namespace Flagrow\Linguist\Api\Controllers;
 
 use Flagrow\Linguist\Api\Serializers\StringKeySerializer;
 use Flagrow\Linguist\Repositories\DefaultStringsRepository;
-use Flarum\Api\Controller\AbstractCollectionController;
-use Flarum\Core\Access\AssertPermissionTrait;
+use Flarum\Api\Controller\AbstractListController;
+use Flarum\User\AssertPermissionTrait;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 
-class StringKeyIndexController extends AbstractCollectionController
+class StringKeyIndexController extends AbstractListController
 {
     use AssertPermissionTrait;
 

@@ -1,7 +1,7 @@
 import Component from 'flarum/Component';
-import localesAsArray from 'flagrow/linguist/utils/localesAsArray';
-import StringLocale from 'flagrow/linguist/components/StringLocale';
-import highlightMithril from 'flagrow/linguist/utils/highlightMithril';
+import StringLocale from '../components/StringLocale';
+import localesAsArray from '../utils/localesAsArray';
+import highlightMithril from '../utils/highlightMithril';
 
 export default class StringKey extends Component {
     view() {

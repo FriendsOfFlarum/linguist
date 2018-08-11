@@ -2,7 +2,7 @@ import {extend} from 'flarum/extend';
 import app from 'flarum/app';
 import AdminNav from 'flarum/components/AdminNav';
 import AdminLinkButton from 'flarum/components/AdminLinkButton';
-import LinguistStringsPane from 'flagrow/linguist/panes/LinguistStringsPane';
+import LinguistStringsPane from './panes/LinguistStringsPane';
 
 export default function () {
     // create the route
@@ -18,7 +18,7 @@ export default function () {
         // add the Image Upload tab to the admin navigation menu
         items.add('flagrow-linguist-strings', AdminLinkButton.component({
             href: app.route('flagrow-linguist-strings'),
-            icon: 'italic',
+            icon: 'fas fa-italic',
             children: app.translator.trans('flagrow-linguist.admin.menu.title'),
             description: app.translator.trans('flagrow-linguist.admin.menu.description'),
         }));

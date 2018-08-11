@@ -1,7 +1,7 @@
 import app from 'flarum/app';
-import StringKey from 'flagrow/linguist/models/StringKey';
-import TextString from 'flagrow/linguist/models/TextString';
-import addLinguistStringsPane from 'flagrow/linguist/addLinguistStringsPane';
+import StringKey from './models/StringKey';
+import TextString from './models/TextString';
+import addLinguistStringsPane from './addLinguistStringsPane';
 
 app.initializers.add('flagrow-linguist', app => {
     app.store.models['flagrow-linguist-string-key'] = StringKey;

@@ -5,7 +5,7 @@ namespace Flagrow\Linguist\Api\Controllers;
 use Flagrow\Linguist\Api\Serializers\StringSerializer;
 use Flagrow\Linguist\Repositories\StringRepository;
 use Flarum\Api\Controller\AbstractCreateController;
-use Flarum\Core\Access\AssertPermissionTrait;
+use Flarum\User\AssertPermissionTrait;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
