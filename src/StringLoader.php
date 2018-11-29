@@ -15,6 +15,11 @@ class StringLoader implements LoaderInterface
     {
         $catalog = new MessageCatalogue($locale);
 
+        // Prevent loading custom translations while we're trying to get the defaults
+        if (!TranslationLock::shouldLoadTranslations()) {
+            return $catalog;
+        }
+
         /**
          * @var $strings StringRepository
          */

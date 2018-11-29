@@ -2,10 +2,10 @@
 
 namespace Flagrow\Linguist\Repositories;
 
+use Flagrow\Linguist\TranslationLock;
 use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Events\Dispatcher;
-use Flarum\Locale\Translator;
 
 class DefaultStringsRepository
 {
@@ -21,17 +21,17 @@ class DefaultStringsRepository
     public function allTranslations()
     {
         /**
-         * @var LocaleManager $manager
-         * @var Translator $translator
+         * @var $manager LocaleManager
          */
         $manager = app(LocaleManager::class);
-        $translator = $manager->getTranslator();
 
-        // Now extract all content from the manager and translator
         $translations = [];
 
+        // We disable our own translation loader so custom strings don't replace original ones
+        TranslationLock::stopLoadingTranslations();
+
         foreach (array_keys($manager->getLocales()) as $locale) {
-            foreach (array_get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
+            foreach (array_get($manager->getTranslator()->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
                 if (!array_has($translations, $key)) {
                     $translations[$key] = [
                         'key' => $key,
@@ -42,6 +42,8 @@ class DefaultStringsRepository
                 $translations[$key]['locales'][$locale] = $string;
             }
         }
+
+        TranslationLock::continueLoadingTranslations();
 
         return collect($translations)->sortBy(function ($value, $key) {
             return $key;
