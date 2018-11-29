@@ -22,7 +22,7 @@
         "source": "https://github.com/flagrow/linguist"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.7"
+        "flarum/core": "^0.1.0-beta.8"
     },
     "extra": {
         "flarum-extension": {
@@ -34,7 +34,7 @@
             }
         },
         "flagrow": {
-            "discuss": "https://discuss.flarum.org/d/7026-flagrow-linguist-customize-translations-with-ease"
+            "discuss": "https://discuss.flarum.org/d/7026"
         }
     },
     "autoload": {
