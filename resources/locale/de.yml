@@ -15,8 +15,8 @@ flagrow-linguist:
             all-locales: Der hier definierte Text wird in allen Sprachen angezeigt
             hint: Original value:
         filters:
-            search: Übersetzre Strings suchen...
-            with-own-translations: Mein Übersetzungen
+            search: Übersetzte Strings suchen...
+            with-own-translations: Meine Übersetzungen
             with-original-translations-in-locales: Mit original Übersetzung in
             without-original-translations-in-locales: Ohne original Übersetzung in
             for-extension: Für Extension
