@@ -20,4 +20,4 @@ flagrow-linguist:
             with-original-translations-in-locales: Mit original Übersetzung in
             without-original-translations-in-locales: Ohne original Übersetzung in
             for-extension: Für Extension
-            results: {shown} von {total} passende Übersetzungen angezeigt
+            results: "{shown} von {total} passende Übersetzungen angezeigt"
