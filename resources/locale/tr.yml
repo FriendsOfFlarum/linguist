@@ -1,0 +1,23 @@
+flagrow-linguist:
+    admin:
+        menu:
+            title: Linguist
+            description: Çevirileri özelleştirin.
+        buttons:
+            apply: Uygula
+            reset: Aslına döndür
+            copy-original: Asıl metin kopyala
+            load-more: Daha fazla
+        locales:
+            all: Tümü
+        placeholder:
+            not-translated: Çevirilmemiş
+            all-locales: Bu alana yazılan bir metin tüm dillerde gösterilir.
+            hint: Asıl değer:
+        filters:
+            search: Çeviriler içerisinde ara...
+            with-own-translations: Çevirilerim
+            with-original-translations-in-locales: Asıl çevirilerde
+            without-original-translations-in-locales: Asıl çeviriler olmadan
+            for-extension: Eklentiler için
+            results: {total} eşleşen çeviriden {shown} adeti gösteriliyor
