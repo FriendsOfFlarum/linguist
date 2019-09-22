@@ -3,6 +3,7 @@
 namespace FoF\Linguist;
 
 use Flarum\Extend;
+use FoF\Linguist\Extenders\ClearCacheStatus;
 use FoF\Linguist\Extenders\LoadStrings;
 use FoF\Linguist\Api\Controllers;
 
@@ -17,5 +18,6 @@ return [
         ->post('/fof/linguist/strings', 'fof.linguist.api.strings.store', Controllers\StringStoreController::class)
         ->patch('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.update', Controllers\StringUpdateController::class)
         ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class),
+    new ClearCacheStatus(),
     new LoadStrings(),
 ];

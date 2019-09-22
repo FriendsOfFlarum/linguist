@@ -3,6 +3,8 @@ import Component from 'flarum/Component';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
 import ExtensionsPage from 'flarum/components/ExtensionsPage';
+import Alert from 'flarum/components/Alert';
+import LoadingModal from 'flarum/components/LoadingModal';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 
@@ -56,6 +58,25 @@ export default class LinguistStringsPane extends Component {
         const keys = this.results.slice(0, this.numberOfResultsToShow);
 
         return m('.container', [
+            m('div', { // The div with key needs to be outside of the ternary operation because null would break DOM ordering
+                key: 'clear-cache',
+            }, app.data.settings['fof.linguist.should-clear-cache'] === '1' ? Alert.component({
+                children: app.translator.trans('fof-linguist.admin.clear-cache.text'),
+                dismissible: false,
+                controls: [Button.component({
+                    className: 'Button Button--link',
+                    onclick() {
+                        // Same logic as in core StatusWidget
+                        app.modal.show(new LoadingModal());
+
+                        app.request({
+                            method: 'DELETE',
+                            url: app.forum.attribute('apiUrl') + '/cache',
+                        }).then(() => window.location.reload());
+                    },
+                    children: app.translator.trans('fof-linguist.admin.clear-cache.button'),
+                })],
+            }) : null),
             m('.FoF-Linguist-Filters', {
                 key: 'filters',
             }, [
@@ -139,6 +160,11 @@ export default class LinguistStringsPane extends Component {
                 key: stringKey.id(),
                 stringKey,
                 highlight: this.filters.search,
+                onchange: () => {
+                    // We use the setting and not a local variable because we need to preserve state
+                    // if we navigate away and back to the Linguist page without refreshing the admin panel
+                    app.data.settings['fof.linguist.should-clear-cache'] = '1';
+                },
             })),
             m('.FoF-Linguist-Results', {
                 key: 'results-stats',

@@ -5,8 +5,11 @@ import highlightMithril from '../utils/highlightMithril';
 
 export default class StringKey extends Component {
     view() {
-        const stringKey = this.props.stringKey;
-        const highlight = this.props.highlight;
+        const {
+            stringKey,
+            highlight,
+            onchange,
+        } = this.props;
 
         return m('.FoF-Linguist-Key', [
             m('.FoF-Linguist-Key-Code', m('code', highlightMithril(stringKey.key(), highlight))),
@@ -16,12 +19,14 @@ export default class StringKey extends Component {
                     locale,
                     stringKey,
                     highlight,
+                    onchange,
                 })),
                 m(StringLocale, {
                     key: 'all',
                     locale: null,
                     stringKey,
                     highlight,
+                    onchange,
                 }),
             ]),
         ]);

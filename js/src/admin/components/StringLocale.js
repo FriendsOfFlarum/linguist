@@ -137,6 +137,8 @@ export default class StringLocale extends Component {
             this.processing = false;
             this.dirty = false;
 
+            this.props.onchange();
+
             m.redraw();
         }).catch(err => {
             this.processing = false;
@@ -155,6 +157,8 @@ export default class StringLocale extends Component {
 
                 this.string = null;
                 this.value = '';
+
+                this.props.onchange();
 
                 m.redraw();
             }).catch(err => {

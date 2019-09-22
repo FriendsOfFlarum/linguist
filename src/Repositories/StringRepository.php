@@ -2,8 +2,10 @@
 
 namespace FoF\Linguist\Repositories;
 
+use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\Linguist\TextString;
 use FoF\Linguist\Validators\StringValidator;
+use Illuminate\Database\Eloquent\Model;
 
 class StringRepository
 {
@@ -40,7 +42,7 @@ class StringRepository
 
     /**
      * @param $id
-     * @return TextString
+     * @return TextString|Model
      */
     public function findOrFail($id)
     {
@@ -50,6 +52,7 @@ class StringRepository
     /**
      * @param array $attributes
      * @return TextString
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(array $attributes)
     {
@@ -58,6 +61,8 @@ class StringRepository
         $string = new TextString($attributes);
         $string->save();
 
+        $this->cacheShouldBeCleared();
+
         return $string;
     }
 
@@ -65,6 +70,7 @@ class StringRepository
      * @param TextString $string
      * @param array $attributes
      * @return TextString
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(TextString $string, array $attributes)
     {
@@ -73,15 +79,30 @@ class StringRepository
         $string->fill($attributes);
         $string->save();
 
+        $this->cacheShouldBeCleared();
+
         return $string;
     }
 
     /**
      * @param TextString $string
+     * @throws \Exception
      */
     public function delete(TextString $string)
     {
         $string->delete();
+
+        $this->cacheShouldBeCleared();
     }
 
+    protected function cacheShouldBeCleared()
+    {
+        /**
+         * @var $settings SettingsRepositoryInterface
+         */
+        $settings = app(SettingsRepositoryInterface::class);
+
+        // This flags lets the frontend know it should suggest to the user to clear the cache
+        $settings->set('fof.linguist.should-clear-cache', '1');
+    }
 }
