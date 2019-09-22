@@ -8,9 +8,9 @@ export default class StringKey extends Component {
         const stringKey = this.props.stringKey;
         const highlight = this.props.highlight;
 
-        return m('.Flagrow-Linguist-Key', [
-            m('.Flagrow-Linguist-Key-Code', m('code', highlightMithril(stringKey.key(), highlight))),
-            m('.Flagrow-Linguist-Locales', [
+        return m('.FoF-Linguist-Key', [
+            m('.FoF-Linguist-Key-Code', m('code', highlightMithril(stringKey.key(), highlight))),
+            m('.FoF-Linguist-Locales', [
                 localesAsArray().map(locale => m(StringLocale, {
                     key: locale.key,
                     locale,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Flagrow\Linguist\Validators;
+namespace FoF\Linguist\Validators;
 
 use Flarum\Foundation\AbstractValidator;
 

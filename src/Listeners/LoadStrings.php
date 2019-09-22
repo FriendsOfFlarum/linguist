@@ -1,8 +1,8 @@
 <?php
 
-namespace Flagrow\Linguist\Listeners;
+namespace FoF\Linguist\Listeners;
 
-use Flagrow\Linguist\StringLoader;
+use FoF\Linguist\StringLoader;
 use Flarum\Event\ConfigureLocales;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -19,13 +19,13 @@ class LoadStrings
     {
         $translator = $event->locales->getTranslator();
 
-        $translator->addLoader('flagrow_linguist', app(StringLoader::class));
+        $translator->addLoader('fof_linguist', app(StringLoader::class));
 
         // Add the custom loader to every language available in Flarum
         foreach ($event->locales->getLocales() as $locale => $name) {
             // The resource does not actually contain any data,
             // it will be fetched from the database when the loader runs
-            $translator->addResource('flagrow_linguist', null, $locale);
+            $translator->addResource('fof_linguist', null, $locale);
         }
     }
 }

@@ -5,7 +5,11 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        $schema->create('flagrow_linguist_strings', function (Blueprint $table) {
+        if ($schema->hasTable('fof_linguist_strings')) {
+            return;
+        }
+
+        $schema->create('fof_linguist_strings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('key', 180)->index();
             $table->string('locale', 10)->nullable()->index();
@@ -16,6 +20,6 @@ return [
         });
     },
     'down' => function (Builder $schema) {
-        $schema->drop('flagrow_linguist_strings');
+        $schema->dropIfExists('fof_linguist_strings');
     },
 ];

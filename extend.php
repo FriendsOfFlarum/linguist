@@ -1,10 +1,10 @@
 <?php
 
-namespace Flagrow\Linguist;
+namespace FoF\Linguist;
 
 use Flarum\Extend;
 use Illuminate\Contracts\Events\Dispatcher;
-use Flagrow\Linguist\Api\Controllers;
+use FoF\Linguist\Api\Controllers;
 
 return [
     (new Extend\Frontend('admin'))
@@ -12,12 +12,12 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
     new Extend\Locales(__DIR__ . '/resources/locale'),
     (new Extend\Routes('api'))
-        ->get('/flagrow/linguist/string-keys', 'flagrow.linguist.api.string-keys.index', Controllers\StringKeyIndexController::class)
-        ->get('/flagrow/linguist/strings', 'flagrow.linguist.api.strings.index', Controllers\StringIndexController::class)
-        ->post('/flagrow/linguist/strings', 'flagrow.linguist.api.strings.store', Controllers\StringStoreController::class)
-        ->patch('/flagrow/linguist/strings/{id:[0-9]+}', 'flagrow.linguist.api.strings.update', Controllers\StringUpdateController::class)
-        ->delete('/flagrow/linguist/strings/{id:[0-9]+}', 'flagrow.linguist.api.strings.delete', Controllers\StringDeleteController::class),
+        ->get('/fof/linguist/string-keys', 'fof.linguist.api.string-keys.index', Controllers\StringKeyIndexController::class)
+        ->get('/fof/linguist/strings', 'fof.linguist.api.strings.index', Controllers\StringIndexController::class)
+        ->post('/fof/linguist/strings', 'fof.linguist.api.strings.store', Controllers\StringStoreController::class)
+        ->patch('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.update', Controllers\StringUpdateController::class)
+        ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class),
     function (Dispatcher $events) {
         $events->subscribe(Listeners\LoadStrings::class);
-    }
+    },
 ];

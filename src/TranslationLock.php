@@ -1,6 +1,6 @@
 <?php
 
-namespace Flagrow\Linguist;
+namespace FoF\Linguist;
 
 class TranslationLock
 {

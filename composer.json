@@ -1,10 +1,9 @@
 {
-    "name": "flagrow/linguist",
+    "name": "fof/linguist",
     "description": "Customize translations",
     "keywords": [
         "extension",
         "flarum",
-        "flagrow",
         "locale",
         "translation"
     ],
@@ -18,19 +17,22 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/flagrow/linguist/issues",
-        "source": "https://github.com/flagrow/linguist"
+        "issues": "https://github.com/FriendsOfFlarum/linguist/issues",
+        "source": "https://github.com/FriendsOfFlarum/linguist"
     },
     "require": {
-        "flarum/core": "^0.1.0-beta.8"
+        "flarum/core": ">=0.1.0-beta.9 <0.1.0-beta.12"
+    },
+    "replace": {
+        "flagrow/linguist": "*"
     },
     "extra": {
         "flarum-extension": {
-            "title": "Flagrow Linguist",
+            "title": "FoF Linguist",
             "icon": {
                 "name": "fas fa-italic",
-                "backgroundColor": "#f4f4f4",
-                "color": "#5f4bb6"
+                "backgroundColor": "#e74c3c",
+                "color": "#fff"
             }
         },
         "flagrow": {
@@ -39,7 +41,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Flagrow\\Linguist\\": "src/"
+            "FoF\\Linguist\\": "src/"
         }
     }
 }

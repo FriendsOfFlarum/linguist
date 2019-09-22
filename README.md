@@ -1,6 +1,6 @@
-# Linguist by ![Flagrow logo](https://avatars0.githubusercontent.com/u/16413865?v=3&s=20) [Flagrow](https://discuss.flarum.org/d/1832-flagrow-extension-developer-group), a project of [Gravure](https://gravure.io/)
+# Linguist by FriendsOfFlarum
 
-[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/flagrow/linguist/blob/master/LICENSE.md) [![Latest Stable Version](https://img.shields.io/packagist/v/flagrow/linguist.svg)](https://packagist.org/packages/flagrow/linguist) [![Total Downloads](https://img.shields.io/packagist/dt/flagrow/linguist.svg)](https://packagist.org/packages/flagrow/linguist) [![Support Us](https://img.shields.io/badge/flagrow.io-support%20us-yellow.svg)](https://flagrow.io/support-us) [![Join our Discord server](https://discordapp.com/api/guilds/240489109041315840/embed.png)](https://flagrow.io/join-discord)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/FriendsOfFlarum/linguist/blob/master/LICENSE.md) [![Latest Stable Version](https://img.shields.io/packagist/v/fof/linguist.svg)](https://packagist.org/packages/fof/linguist) [![Total Downloads](https://img.shields.io/packagist/dt/fof/linguist.svg)](https://packagist.org/packages/fof/linguist)
 
 With this extension you can configure alternate or missing translation strings for your forum. Includes:
 
@@ -10,28 +10,49 @@ With this extension you can configure alternate or missing translation strings f
 - Easily search for strings by name or value in any language
 - Multiple filters to find strings that are missing translations or belong to a specific extension
 
-Don't forget to clear the cache with `php flarum cache:clear` if the new translations aren't showing up.
+Don't forget to clear the cache via *Dashboard > Tools > Clear cache* or by running `php flarum cache:clear` if the new translations aren't showing up.
 
-Want to clear the cache via the admin panel ?
-We recommend using [Reflar UnCache](https://discuss.flarum.org/d/12399-uncache-by-reflar-no-more-cache-problems) for that.
-
-Also note Flarum uses a ["one place, one translation key"](http://flarum.org/docs/extend/internationalize/) approach to translations, so you might have to edit several keys to replace a specific keyword.
+Also note Flarum uses a ["one place, one translation key"](https://flarum.org/docs/extend/i18n.html) approach to translations, so you might have to edit several keys to replace a specific keyword.
 
 ## Installation
 
-Use [Bazaar](https://discuss.flarum.org/d/5151-flagrow-bazaar-the-extension-marketplace) or install manually:
+Use [Bazaar](https://discuss.flarum.org/d/5151) or install manually:
 
-```bash
-composer require flagrow/linguist
+```sh
+composer require fof/linguist
 ```
 
 ## Updating
 
-```bash
-composer update flagrow/linguist
+To the next minor version:
+
+```sh
+composer update fof/linguist
 php flarum migrate
 php flarum cache:clear
 ```
+
+To the latest compatible version:
+
+```sh
+composer require fof/linguist
+php flarum migrate
+php flarum cache:clear
+```
+
+### Updating from Flagrow
+
+This extension replaces [Flagrow Linguist](https://packagist.org/packages/flagrow/linguist).
+
+To upgrade from the old extension to the new one:
+
+```sh
+composer require fof/linguist
+```
+
+Composer should let you know that `flagrow/linguist` has been automatically removed.
+
+Then enable the new extension in the admin panel.
 
 ## Configuration
 
@@ -44,21 +65,11 @@ A special field "all" allows you to define a single text that will be shown in a
 
 Keep in mind some strings contain references in the form `{referencename}` that you have to keep identical if you want the data to show up.
 
-## Support our work
-
-Check out how to support Flagrow extensions at [flagrow.io/support-us](https://flagrow.io/support-us).
-
-## Security
-
-If you discover a security vulnerability within Linguist, please send an email to the Gravure team at security@gravure.io. All security vulnerabilities will be promptly addressed.
-
-Please include as many details as possible. You can use `php flarum info` to get the PHP, Flarum and extension versions installed.
-
 ## Links
 
-- [Flarum Discuss post](https://discuss.flarum.org/d/7026-flagrow-linguist-customize-translations-with-ease)
-- [Source code on GitHub](https://github.com/flagrow/linguist)
-- [Report an issue](https://github.com/flagrow/linguist/issues)
-- [Download via Packagist](https://packagist.org/packages/flagrow/linguist)
+- [Flarum Discuss post](https://discuss.flarum.org/d/7026)
+- [Source code on GitHub](https://github.com/FriendsOfFlarum/linguist)
+- [Report an issue](https://github.com/FriendsOfFlarum/linguist/issues)
+- [Download via Packagist](https://packagist.org/packages/fof/linguist)
 
-An extension by [Flagrow](https://flagrow.io/), a project of [Gravure](https://gravure.io/).
+An extension by [FriendsOfFlarum](https://github.com/FriendsOfFlarum)

@@ -1,8 +1,8 @@
 <?php
 
-namespace Flagrow\Linguist\Repositories;
+namespace FoF\Linguist\Repositories;
 
-use Flagrow\Linguist\TranslationLock;
+use FoF\Linguist\TranslationLock;
 use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Events\Dispatcher;

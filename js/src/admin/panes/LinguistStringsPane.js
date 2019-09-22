@@ -27,13 +27,13 @@ export default class LinguistStringsPane extends Component {
         m.sync([
             app.request({
                 method: 'GET',
-                url: app.forum.attribute('apiUrl') + '/flagrow/linguist/strings',
+                url: app.forum.attribute('apiUrl') + '/fof/linguist/strings',
             }).then(result => {
                 app.store.pushPayload(result);
             }),
             app.request({
                 method: 'GET',
-                url: app.forum.attribute('apiUrl') + '/flagrow/linguist/string-keys',
+                url: app.forum.attribute('apiUrl') + '/fof/linguist/string-keys',
             }).then(result => {
                 const keys = app.store.pushPayload(result);
 
@@ -56,7 +56,7 @@ export default class LinguistStringsPane extends Component {
         const keys = this.results.slice(0, this.numberOfResultsToShow);
 
         return m('.container', [
-            m('.Flagrow-Linguist-Filters', {
+            m('.FoF-Linguist-Filters', {
                 key: 'filters',
             }, [
                 m('input.FormControl', {
@@ -66,19 +66,19 @@ export default class LinguistStringsPane extends Component {
                         this.filters.search = value;
                         this.applyFilters();
                     }),
-                    placeholder: app.translator.trans('flagrow-linguist.admin.filters.search'),
+                    placeholder: app.translator.trans('fof-linguist.admin.filters.search'),
                 }),
                 Button.component({
-                    className: 'Button' + (this.filters.withOwnTranslations ? ' Flagrow-Linguist-Filter--Selected' : ''),
+                    className: 'Button' + (this.filters.withOwnTranslations ? ' FoF-Linguist-Filter--Selected' : ''),
                     icon: `far fa-${this.filters.withOwnTranslations ? 'check-square' : 'square'}`,
                     onclick: () => {
                         this.filters.withOwnTranslations = !this.filters.withOwnTranslations;
                         this.applyFilters();
                     },
-                }, app.translator.trans('flagrow-linguist.admin.filters.with-own-translations')),
+                }, app.translator.trans('fof-linguist.admin.filters.with-own-translations')),
                 Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.forExtension ? ' Flagrow-Linguist-Filter--Selected' : ''),
-                    label: app.translator.trans('flagrow-linguist.admin.filters.for-extension'),
+                    buttonClassName: 'Button' + (this.filters.forExtension ? ' FoF-Linguist-Filter--Selected' : ''),
+                    label: app.translator.trans('fof-linguist.admin.filters.for-extension'),
                 }, this.enabledExtensions.map(
                     extension => Button.component({
                         className: 'Button',
@@ -95,8 +95,8 @@ export default class LinguistStringsPane extends Component {
                     }, extension.extra['flarum-extension'].title)
                 )),
                 Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.withoutOriginalTranslationsInLocales.length ? ' Flagrow-Linguist-Filter--Selected' : ''),
-                    label: app.translator.trans('flagrow-linguist.admin.filters.without-original-translations-in-locales'),
+                    buttonClassName: 'Button' + (this.filters.withoutOriginalTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),
+                    label: app.translator.trans('fof-linguist.admin.filters.without-original-translations-in-locales'),
                 }, localesAsArray().map(
                     locale => Button.component({
                         className: 'Button',
@@ -115,8 +115,8 @@ export default class LinguistStringsPane extends Component {
                     }, locale.name + ' (' + locale.key + ')')
                 )),
                 Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.withOriginalTranslationsInLocales.length ? ' Flagrow-Linguist-Filter--Selected' : ''),
-                    label: app.translator.trans('flagrow-linguist.admin.filters.with-original-translations-in-locales'),
+                    buttonClassName: 'Button' + (this.filters.withOriginalTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),
+                    label: app.translator.trans('fof-linguist.admin.filters.with-original-translations-in-locales'),
                 }, localesAsArray().map(
                     locale => Button.component({
                         className: 'Button',
@@ -140,10 +140,10 @@ export default class LinguistStringsPane extends Component {
                 stringKey,
                 highlight: this.filters.search,
             })),
-            m('.Flagrow-Linguist-Results', {
+            m('.FoF-Linguist-Results', {
                 key: 'results-stats',
             }, [
-                app.translator.trans('flagrow-linguist.admin.filters.results', {
+                app.translator.trans('fof-linguist.admin.filters.results', {
                     shown: keys.length + '', // cast to string otherwise number isn't displayed
                     total: this.results.length + '',
                 }),
@@ -153,7 +153,7 @@ export default class LinguistStringsPane extends Component {
                     onclick: () => {
                         this.numberOfResultsToShow += RESULTS_PER_PAGE;
                     },
-                }, app.translator.trans('flagrow-linguist.admin.buttons.load-more')) : null),
+                }, app.translator.trans('fof-linguist.admin.buttons.load-more')) : null),
             ]),
         ]);
     }
@@ -161,9 +161,9 @@ export default class LinguistStringsPane extends Component {
     applyFilters() {
         this.numberOfResultsToShow = RESULTS_PER_PAGE;
 
-        const keysWithCustomTranslations = app.store.all('flagrow-linguist-string').map(string => string.key());
+        const keysWithCustomTranslations = app.store.all('fof-linguist-string').map(string => string.key());
 
-        this.results = app.store.all('flagrow-linguist-string-key').filter(key => {
+        this.results = app.store.all('fof-linguist-string-key').filter(key => {
             if (this.filters.withOwnTranslations && keysWithCustomTranslations.indexOf(key.key()) === -1) {
                 return false;
             }

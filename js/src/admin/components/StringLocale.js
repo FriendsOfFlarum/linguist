@@ -11,7 +11,7 @@ export default class StringLocale extends Component {
         this.localeKey = this.locale ? this.locale.key : null;
         this.originalString = this.localeKey && this.stringKey.locales().hasOwnProperty(this.localeKey) ? this.stringKey.locales()[this.localeKey] : null;
 
-        this.string = app.store.all('flagrow-linguist-string').find(
+        this.string = app.store.all('fof-linguist-string').find(
             string => string.key() === this.stringKey.key() && string.locale() === this.localeKey
         );
 
@@ -27,17 +27,17 @@ export default class StringLocale extends Component {
     }
 
     view() {
-        const placeholderText = this.originalString ? this.originalString : '(' + app.translator.trans('flagrow-linguist.admin.placeholder.' + (this.localeKey ? 'not-translated' : 'all-locales')) + ')';
+        const placeholderText = this.originalString ? this.originalString : '(' + app.translator.trans('fof-linguist.admin.placeholder.' + (this.localeKey ? 'not-translated' : 'all-locales')) + ')';
 
-        return m('.Flagrow-Linguist-Locale', [
-            m('label.Flagrow-Linguist-Label', this.localeName()),
-            m('.Flagrow-Linguist-Field', {
-                className: (this.value ? 'Flagrow-Linguist-Field--with-value' : '') + (this.originalString ? ' Flagrow-Linguist-Field--with-original-string' : ''),
+        return m('.FoF-Linguist-Locale', [
+            m('label.FoF-Linguist-Label', this.localeName()),
+            m('.FoF-Linguist-Field', {
+                className: (this.value ? 'FoF-Linguist-Field--with-value' : '') + (this.originalString ? ' FoF-Linguist-Field--with-original-string' : ''),
                 title: placeholderText,
             }, [
-                m('.Flagrow-Linguist-Feld-Wrap', [
+                m('.FoF-Linguist-Feld-Wrap', [
                     m(this.inputType, {
-                        className: 'FormControl Flagrow-Linguist-Input',
+                        className: 'FormControl FoF-Linguist-Input',
                         value: this.value,
                         oninput: m.withAttr('value', value => {
                             this.value = value;
@@ -50,14 +50,14 @@ export default class StringLocale extends Component {
                         }),
                         disabled: this.processing,
                     }),
-                    m('.Flagrow-Linguist-Placeholder', [
-                        m('span.Flagrow-Linguist-Placeholder-Hint', app.translator.trans('flagrow-linguist.admin.placeholder.hint')),
+                    m('.FoF-Linguist-Placeholder', [
+                        m('span.FoF-Linguist-Placeholder-Hint', app.translator.trans('fof-linguist.admin.placeholder.hint')),
                         ' ',
                         m('span', this.originalString ? highlightMithril(placeholderText, this.props.highlight) : placeholderText),
                     ]),
                 ]),
             ]),
-            m('.Flagrow-Linguist-Controls', this.actions().toArray()),
+            m('.FoF-Linguist-Controls', this.actions().toArray()),
         ]);
     }
 
@@ -65,7 +65,7 @@ export default class StringLocale extends Component {
         if (this.locale) {
             return [this.locale.name + ' (', m('code', this.locale.key), ')'];
         } else {
-            return app.translator.trans('flagrow-linguist.admin.locales.all');
+            return app.translator.trans('fof-linguist.admin.locales.all');
         }
     }
 
@@ -75,7 +75,7 @@ export default class StringLocale extends Component {
         items.add('apply', Button.component({
             type: 'button',
             className: 'Button Button--primary',
-            children: app.translator.trans('flagrow-linguist.admin.buttons.apply'),
+            children: app.translator.trans('fof-linguist.admin.buttons.apply'),
             loading: this.processing,
             disabled: !this.dirty,
             onclick: () => {
@@ -86,7 +86,7 @@ export default class StringLocale extends Component {
         items.add('reset', Button.component({
             type: 'button',
             className: 'Button',
-            children: app.translator.trans('flagrow-linguist.admin.buttons.reset'),
+            children: app.translator.trans('fof-linguist.admin.buttons.reset'),
             loading: this.processing,
             disabled: !this.dirty && !this.string,
             onclick: () => {
@@ -98,7 +98,7 @@ export default class StringLocale extends Component {
             items.add('copy-original', Button.component({
                 type: 'button',
                 className: 'Button',
-                children: app.translator.trans('flagrow-linguist.admin.buttons.copy-original'),
+                children: app.translator.trans('fof-linguist.admin.buttons.copy-original'),
                 loading: this.processing,
                 onclick: () => {
                     this.value = this.originalString;
@@ -118,7 +118,7 @@ export default class StringLocale extends Component {
         }
 
         if (!this.string) {
-            this.string = app.store.createRecord('flagrow-linguist-string', {
+            this.string = app.store.createRecord('fof-linguist-string', {
                 attributes: {
                     key: this.stringKey.key(),
                     locale: this.localeKey,

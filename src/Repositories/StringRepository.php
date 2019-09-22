@@ -1,9 +1,9 @@
 <?php
 
-namespace Flagrow\Linguist\Repositories;
+namespace FoF\Linguist\Repositories;
 
-use Flagrow\Linguist\TextString;
-use Flagrow\Linguist\Validators\StringValidator;
+use FoF\Linguist\TextString;
+use FoF\Linguist\Validators\StringValidator;
 
 class StringRepository
 {

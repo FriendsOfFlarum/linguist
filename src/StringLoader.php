@@ -1,8 +1,8 @@
 <?php
 
-namespace Flagrow\Linguist;
+namespace FoF\Linguist;
 
-use Flagrow\Linguist\Repositories\StringRepository;
+use FoF\Linguist\Repositories\StringRepository;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 

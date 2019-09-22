@@ -10,6 +10,6 @@ export default class TextString extends mixin(Model, {
      * @inheritDoc
      */
     apiEndpoint() {
-        return '/flagrow/linguist/strings' + (this.exists ? '/' + this.data.id : '');
+        return '/fof/linguist/strings' + (this.exists ? '/' + this.data.id : '');
     }
 }

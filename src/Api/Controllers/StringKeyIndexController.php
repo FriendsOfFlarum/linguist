@@ -1,9 +1,9 @@
 <?php
 
-namespace Flagrow\Linguist\Api\Controllers;
+namespace FoF\Linguist\Api\Controllers;
 
-use Flagrow\Linguist\Api\Serializers\StringKeySerializer;
-use Flagrow\Linguist\Repositories\DefaultStringsRepository;
+use FoF\Linguist\Api\Serializers\StringKeySerializer;
+use FoF\Linguist\Repositories\DefaultStringsRepository;
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\User\AssertPermissionTrait;
 use Psr\Http\Message\ServerRequestInterface;

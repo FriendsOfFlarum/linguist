@@ -1,8 +1,8 @@
 <?php
 
-namespace Flagrow\Linguist\Api\Controllers;
+namespace FoF\Linguist\Api\Controllers;
 
-use Flagrow\Linguist\Repositories\StringRepository;
+use FoF\Linguist\Repositories\StringRepository;
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\User\AssertPermissionTrait;
 use Illuminate\Support\Arr;

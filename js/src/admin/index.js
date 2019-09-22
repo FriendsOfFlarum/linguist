@@ -3,9 +3,9 @@ import StringKey from './models/StringKey';
 import TextString from './models/TextString';
 import addLinguistStringsPane from './addLinguistStringsPane';
 
-app.initializers.add('flagrow-linguist', app => {
-    app.store.models['flagrow-linguist-string-key'] = StringKey;
-    app.store.models['flagrow-linguist-string'] = TextString;
+app.initializers.add('fof-linguist', app => {
+    app.store.models['fof-linguist-string-key'] = StringKey;
+    app.store.models['fof-linguist-string'] = TextString;
 
     addLinguistStringsPane();
 });

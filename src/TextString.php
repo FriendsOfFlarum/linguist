@@ -1,6 +1,6 @@
 <?php
 
-namespace Flagrow\Linguist;
+namespace FoF\Linguist;
 
 use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
@@ -17,7 +17,7 @@ class TextString extends AbstractModel
 {
     public $timestamps = true;
 
-    protected $table = 'flagrow_linguist_strings';
+    protected $table = 'fof_linguist_strings';
 
     protected $visible = [
         'key',

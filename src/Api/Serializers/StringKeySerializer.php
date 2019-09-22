@@ -1,6 +1,6 @@
 <?php
 
-namespace Flagrow\Linguist\Api\Serializers;
+namespace FoF\Linguist\Api\Serializers;
 
 use Flarum\Api\Serializer\AbstractSerializer;
 
@@ -8,7 +8,7 @@ class StringKeySerializer extends AbstractSerializer
 {
     public function getType($model)
     {
-        return 'flagrow-linguist-string-key';
+        return 'fof-linguist-string-key';
     }
 
     public function getId($model)

@@ -5,22 +5,19 @@ import AdminLinkButton from 'flarum/components/AdminLinkButton';
 import LinguistStringsPane from './panes/LinguistStringsPane';
 
 export default function () {
-    // create the route
-    app.routes['flagrow-linguist-strings'] = {
-        path: '/flagrow/linguist',
+    app.routes['fof-linguist-strings'] = {
+        path: '/linguist',
         component: LinguistStringsPane.component(),
     };
 
-    // bind the route we created to the three dots settings button
-    app.extensionSettings['flagrow-linguist'] = () => m.route(app.route('flagrow-linguist-strings'));
+    app.extensionSettings['fof-linguist'] = () => m.route(app.route('fof-linguist-strings'));
 
     extend(AdminNav.prototype, 'items', items => {
-        // add the Image Upload tab to the admin navigation menu
-        items.add('flagrow-linguist-strings', AdminLinkButton.component({
-            href: app.route('flagrow-linguist-strings'),
+        items.add('fof-linguist-strings', AdminLinkButton.component({
+            href: app.route('fof-linguist-strings'),
             icon: 'fas fa-italic',
-            children: app.translator.trans('flagrow-linguist.admin.menu.title'),
-            description: app.translator.trans('flagrow-linguist.admin.menu.description'),
+            children: app.translator.trans('fof-linguist.admin.menu.title'),
+            description: app.translator.trans('fof-linguist.admin.menu.description'),
         }));
     });
 }

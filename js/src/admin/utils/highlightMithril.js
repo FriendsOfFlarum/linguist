@@ -1,4 +1,4 @@
-const HIGHLIGHT_DELIMITER = '<flagrow-highlight>';
+const HIGHLIGHT_DELIMITER = '<fof-highlight>';
 
 // Takes a string and highlight a keyword with a span with mithril template
 // The output will be an array if a keyword is given
@@ -12,7 +12,7 @@ export default function (string, highlight) {
         .split(HIGHLIGHT_DELIMITER)
         .map(text => {
             if (text === highlight) {
-                return m('span.Flagrow-Linguist-Highlight', text);
+                return m('span.FoF-Linguist-Highlight', text);
             }
 
             return text;
