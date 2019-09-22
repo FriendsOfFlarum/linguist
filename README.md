@@ -10,7 +10,10 @@ With this extension you can configure alternate or missing translation strings f
 - Easily search for strings by name or value in any language
 - Multiple filters to find strings that are missing translations or belong to a specific extension
 
-Don't forget to clear the cache via *Dashboard > Tools > Clear cache* or by running `php flarum cache:clear` if the new translations aren't showing up.
+After editing translations, Linguist will offer you the opportunity to clear the forum cache.
+For performance reasons, Linguist won't attempt to clear the cache by itself.
+
+If the new translations don't show up, try clearing the cache again by using *Dashboard > Tools > Clear cache* or by running `php flarum cache:clear`.
 
 Also note Flarum uses a ["one place, one translation key"](https://flarum.org/docs/extend/i18n.html) approach to translations, so you might have to edit several keys to replace a specific keyword.
 
@@ -46,13 +49,21 @@ This extension replaces [Flagrow Linguist](https://packagist.org/packages/flagro
 
 To upgrade from the old extension to the new one:
 
+- Disable the Linguist extension in the admin panel.
+
+- Run:
+
 ```sh
 composer require fof/linguist
 ```
 
 Composer should let you know that `flagrow/linguist` has been automatically removed.
 
-Then enable the new extension in the admin panel.
+- Enable the new extension in the admin panel.
+
+- Your existing translations will be migrated to FoF Linguist automatically.
+
+- Edit a translation or clear the cache to apply the existing translations to the forum.
 
 ## Configuration
 
