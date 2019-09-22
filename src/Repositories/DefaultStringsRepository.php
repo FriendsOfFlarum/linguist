@@ -5,6 +5,7 @@ namespace FoF\Linguist\Repositories;
 use FoF\Linguist\TranslationLock;
 use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
+use FoF\Linguist\Translator\NoOpConfigCacheFactory;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class DefaultStringsRepository
@@ -25,13 +26,22 @@ class DefaultStringsRepository
          */
         $manager = app(LocaleManager::class);
 
+        $translator = $manager->getTranslator();
+
+        // Use our own cache factory that will force a fresh catalog load and not write it to file.
+        // This allows us to get fresh original strings without the Linguist-defined ones without
+        // clearing Flarum's locale cache (which contains Linguist custom strings).
+        // If we cleared the cache here, this would clear the cache every time the Linguist tab is visited,
+        // even if no translation is modified. This would be an unnecessary performance hit.
+        $translator->setConfigCacheFactory(new NoOpConfigCacheFactory());
+
         $translations = [];
 
         // We disable our own translation loader so custom strings don't replace original ones
         TranslationLock::stopLoadingTranslations();
 
         foreach (array_keys($manager->getLocales()) as $locale) {
-            foreach (array_get($manager->getTranslator()->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
+            foreach (array_get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
                 if (!array_has($translations, $key)) {
                     $translations[$key] = [
                         'key' => $key,
@@ -44,6 +54,10 @@ class DefaultStringsRepository
         }
 
         TranslationLock::continueLoadingTranslations();
+
+        // We don't reset the cache factory because it's not really needed. All catalogs are now already loaded
+        // so no need to make Flarum use the cached version again to finish answering this request.
+        // We would only miss Linguist-defined strings inside the eventual errors happening later in this very request.
 
         return collect($translations)->sortBy(function ($value, $key) {
             return $key;

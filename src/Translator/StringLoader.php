@@ -1,8 +1,9 @@
 <?php
 
-namespace FoF\Linguist;
+namespace FoF\Linguist\Translator;
 
 use FoF\Linguist\Repositories\StringRepository;
+use FoF\Linguist\TranslationLock;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 

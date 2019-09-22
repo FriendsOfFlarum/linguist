@@ -3,7 +3,7 @@
 namespace FoF\Linguist;
 
 use Flarum\Extend;
-use Illuminate\Contracts\Events\Dispatcher;
+use FoF\Linguist\Extenders\LoadStrings;
 use FoF\Linguist\Api\Controllers;
 
 return [
@@ -17,7 +17,5 @@ return [
         ->post('/fof/linguist/strings', 'fof.linguist.api.strings.store', Controllers\StringStoreController::class)
         ->patch('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.update', Controllers\StringUpdateController::class)
         ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class),
-    function (Dispatcher $events) {
-        $events->subscribe(Listeners\LoadStrings::class);
-    },
+    new LoadStrings(),
 ];
