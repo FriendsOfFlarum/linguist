@@ -189,6 +189,12 @@ export default class LinguistStringsPane extends Component {
 
         const keysWithCustomTranslations = app.store.all('fof-linguist-string').map(string => string.key());
 
+        let lowercaseSearch = '';
+
+        if (this.filters.search) {
+            lowercaseSearch = this.filters.search.toLowerCase();
+        }
+
         this.results = app.store.all('fof-linguist-string-key').filter(key => {
             if (this.filters.withOwnTranslations && keysWithCustomTranslations.indexOf(key.key()) === -1) {
                 return false;
@@ -213,15 +219,15 @@ export default class LinguistStringsPane extends Component {
                 }
             }
 
-            if (this.filters.search) {
-                if (key.key().indexOf(this.filters.search) !== -1) {
+            if (lowercaseSearch) {
+                if (key.key().toLowerCase().indexOf(lowercaseSearch) !== -1) {
                     return true;
                 }
 
                 const locales = key.locales();
 
                 for (let locale in locales) {
-                    if (locales.hasOwnProperty(locale) && locales[locale].indexOf(this.filters.search) !== -1) {
+                    if (locales.hasOwnProperty(locale) && locales[locale].toLowerCase().indexOf(lowercaseSearch) !== -1) {
                         return true;
                     }
                 }

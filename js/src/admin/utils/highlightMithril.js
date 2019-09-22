@@ -7,11 +7,16 @@ export default function (string, highlight) {
         return string;
     }
 
+    const lowercaseHighliht = highlight.toLowerCase();
+
+    // Regex to match the highlighted work in a case-insensitive manner
+    const regex = new RegExp(lowercaseHighliht.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+
     return string
-        .replace(highlight, HIGHLIGHT_DELIMITER + highlight + HIGHLIGHT_DELIMITER, string)
+        .replace(regex, HIGHLIGHT_DELIMITER + '$&' + HIGHLIGHT_DELIMITER)
         .split(HIGHLIGHT_DELIMITER)
         .map(text => {
-            if (text === highlight) {
+            if (text.toLowerCase() === lowercaseHighliht) {
                 return m('span.FoF-Linguist-Highlight', text);
             }
 
