@@ -5,6 +5,7 @@ import Dropdown from 'flarum/components/Dropdown';
 import ExtensionsPage from 'flarum/components/ExtensionsPage';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
+import extractText from 'flarum/utils/extractText';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 
@@ -24,7 +25,7 @@ export default class LinguistStringsPane extends Component {
 
         this.results = [];
 
-        this.enabledExtensions = [];
+        this.extensions = [];
 
         m.sync([
             app.request({
@@ -39,14 +40,19 @@ export default class LinguistStringsPane extends Component {
             }).then(result => {
                 const keys = app.store.pushPayload(result);
 
-                // Construct an array with extensions that are enabled and have translations with the extension id as prefix
                 Object.keys(app.data.extensions).forEach(extensionId => {
-                    if (
-                        ExtensionsPage.prototype.isEnabled(extensionId) &&
-                        keys.findIndex(key => key.key().indexOf(extensionId + '.') === 0) !== -1
-                    ) {
-                        this.enabledExtensions.push(app.data.extensions[extensionId]);
+                    const extension = app.data.extensions[extensionId];
+
+                    // We don't show disabled extensions and language packs
+                    if (!ExtensionsPage.prototype.isEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
+                        return;
                     }
+
+                    this.extensions.push({
+                        extension,
+                        // canBeTranslated means translations exist with that extension's ID as prefix
+                        canBeTranslated: keys.findIndex(key => key.key().indexOf(extensionId + '.') === 0) !== -1,
+                    });
                 });
             }),
         ]).then(() => {
@@ -100,20 +106,31 @@ export default class LinguistStringsPane extends Component {
                 Dropdown.component({
                     buttonClassName: 'Button' + (this.filters.forExtension ? ' FoF-Linguist-Filter--Selected' : ''),
                     label: app.translator.trans('fof-linguist.admin.filters.for-extension'),
-                }, this.enabledExtensions.map(
-                    extension => Button.component({
-                        className: 'Button',
-                        icon: `far fa-${this.filters.forExtension === extension.id ? 'check-square' : 'square'}`,
-                        onclick: () => {
-                            if (this.filters.forExtension === extension.id) {
+                }, this.extensions.map(
+                    extensionData => Button.component({
+                        className: 'Button' + (extensionData.canBeTranslated ? '' : ' disabled'),
+                        icon: `far fa-${this.filters.forExtension === extensionData.extension.id ? 'check-square' : 'square'}`,
+                        onclick: event => {
+                            if (!extensionData.canBeTranslated) {
+                                event.stopPropagation();
+
+                                // Provide an explanation why some extensions might not be offered for translation
+                                alert(extractText(app.translator.trans('fof-linguist.admin.filters.for-extension-unavailable', {
+                                    namespace: extensionData.extension.id,
+                                })));
+
+                                return;
+                            }
+
+                            if (this.filters.forExtension === extensionData.extension.id) {
                                 this.filters.forExtension = null;
                             } else {
-                                this.filters.forExtension = extension.id;
+                                this.filters.forExtension = extensionData.extension.id;
                             }
 
                             this.applyFilters();
                         },
-                    }, extension.extra['flarum-extension'].title)
+                    }, extensionData.extension.extra['flarum-extension'].title)
                 )),
                 Dropdown.component({
                     buttonClassName: 'Button' + (this.filters.withoutOriginalTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),

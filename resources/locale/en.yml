@@ -20,6 +20,10 @@ fof-linguist:
             with-original-translations-in-locales: With original translations in
             without-original-translations-in-locales: Without original translations in
             for-extension: For extension
+            for-extension-unavailable: >
+                No translations were found in the expected namespace "{namespace}".
+                Maybe this extension doesn't have any text to translate or is using a different namespace.
+                Try using the search field to locate its translations.
             results: Showing {shown} of {total} matching translations
         clear-cache:
             text: >
