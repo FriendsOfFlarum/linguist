@@ -35,7 +35,7 @@ export default class StringLocale extends Component {
                 className: (this.value ? 'FoF-Linguist-Field--with-value' : '') + (this.originalString ? ' FoF-Linguist-Field--with-original-string' : ''),
                 title: placeholderText,
             }, [
-                m('.FoF-Linguist-Feld-Wrap', [
+                m('.FoF-Linguist-Field-Wrap', [
                     m(this.inputType, {
                         className: 'FormControl FoF-Linguist-Input',
                         value: this.value,
