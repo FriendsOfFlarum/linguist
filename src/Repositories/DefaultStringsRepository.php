@@ -7,6 +7,7 @@ use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\Linguist\Translator\NoOpConfigCacheFactory;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Arr;
 
 class DefaultStringsRepository
 {
@@ -41,15 +42,17 @@ class DefaultStringsRepository
         TranslationLock::stopLoadingTranslations();
 
         foreach (array_keys($manager->getLocales()) as $locale) {
-            foreach (array_get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
-                if (!array_has($translations, $key)) {
+            foreach (Arr::get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
+                if (!Arr::has($translations, $key)) {
                     $translations[$key] = [
                         'key' => $key,
                         'locales' => [],
                     ];
                 }
 
-                $translations[$key]['locales'][$locale] = $string;
+                // A value could be null if it's defined in the yaml file, but doesn't have any value after the comma
+                // We cast everything to string because it's the only type of data Linguist will deal with
+                $translations[$key]['locales'][$locale] = (string)$string;
             }
         }
 

@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Api\Serializers;
 
 use Flarum\Api\Serializer\AbstractSerializer;
+use Illuminate\Support\Arr;
 
 class StringKeySerializer extends AbstractSerializer
 {
@@ -13,7 +14,7 @@ class StringKeySerializer extends AbstractSerializer
 
     public function getId($model)
     {
-        return array_get($model, 'key');
+        return Arr::get($model, 'key');
     }
 
     protected function getDefaultAttributes($model)
