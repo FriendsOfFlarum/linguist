@@ -224,7 +224,6 @@ export default class LinguistStringsPane extends Component {
             }
 
             for (let locale of this.filters.withoutOriginalTranslationsInLocales) {
-                console.log(locale);
                 if (key.locales().hasOwnProperty(locale)) {
                     return false;
                 }
