@@ -2,6 +2,7 @@ import app from 'flarum/app';
 import Page from 'flarum/components/Page';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
+import Select from 'flarum/components/Select';
 import ExtensionsPage from 'flarum/components/ExtensionsPage';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
@@ -22,8 +23,9 @@ export default class LinguistStringsPage extends Page {
         this.filters = {
             search: '',
             withOwnTranslations: false,
-            withOriginalTranslationsInLocales: [],
-            withoutOriginalTranslationsInLocales: [],
+            missingTranslationsNegation: 'without',
+            missingTranslationsType: 'any',
+            missingTranslationsInLocales: [],
             forExtension: null,
         };
 
@@ -131,45 +133,62 @@ export default class LinguistStringsPage extends Page {
                     }, extensionData.extension.extra['flarum-extension'].title)
                 )),
                 Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.withoutOriginalTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),
-                    label: app.translator.trans('fof-linguist.admin.filters.without-original-translations-in-locales'),
-                }, localesAsArray().map(
-                    locale => Button.component({
-                        className: 'Button',
-                        icon: `far fa-${this.filters.withoutOriginalTranslationsInLocales.includes(locale.key) ? 'check-square' : 'square'}`,
-                        onclick: () => {
-                            if (this.filters.withoutOriginalTranslationsInLocales.indexOf(locale.key) !== -1) {
-                                this.filters.withoutOriginalTranslationsInLocales = this.filters.withoutOriginalTranslationsInLocales.filter(
-                                    key => key !== locale.key
-                                );
-                            } else {
-                                this.filters.withoutOriginalTranslationsInLocales.push(locale.key);
-                            }
-
-                            this.applyFilters();
+                    buttonClassName: 'Button' + (this.filters.missingTranslationsInLocale ? ' FoF-Linguist-Filter--Selected' : ''),
+                    label: app.translator.trans('fof-linguist.admin.filters.missing'),
+                }, [
+                    m('.FoF-Linguist-Missing-Filter', {
+                        onclick(event) {
+                            // Prevent closing the dropdown
+                            event.stopPropagation();
                         },
-                    }, locale.name + ' (' + locale.key + ')')
-                )),
-                Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.withOriginalTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),
-                    label: app.translator.trans('fof-linguist.admin.filters.with-original-translations-in-locales'),
-                }, localesAsArray().map(
-                    locale => Button.component({
-                        className: 'Button',
-                        icon: `far fa-${this.filters.withOriginalTranslationsInLocales.includes(locale.key) ? 'check-square' : 'square'}`,
-                        onclick: () => {
-                            if (this.filters.withOriginalTranslationsInLocales.indexOf(locale.key) !== -1) {
-                                this.filters.withOriginalTranslationsInLocales = this.filters.withOriginalTranslationsInLocales.filter(
-                                    key => key !== locale.key
-                                );
-                            } else {
-                                this.filters.withOriginalTranslationsInLocales.push(locale.key);
-                            }
+                    }, [
+                        Select.component({
+                            value: this.filters.missingTranslationsNegation,
+                            onchange: value => {
+                                this.filters.missingTranslationsNegation = value;
 
-                            this.applyFilters();
-                        },
-                    }, locale.name + ' (' + locale.key + ')')
-                )),
+                                if (this.filters.missingTranslationsInLocale) {
+                                    this.applyFilters();
+                                }
+                            },
+                            options: {
+                                without: app.translator.trans('fof-linguist.admin.filters.negation-options.without'),
+                                with: app.translator.trans('fof-linguist.admin.filters.negation-options.with'),
+                            }
+                        }),
+                        Select.component({
+                            value: this.filters.missingTranslationsType,
+                            onchange: value => {
+                                this.filters.missingTranslationsType = value;
+
+                                if (this.filters.missingTranslationsInLocale) {
+                                    this.applyFilters();
+                                }
+                            },
+                            options: {
+                                any: app.translator.trans('fof-linguist.admin.filters.type-options.any'),
+                                original: app.translator.trans('fof-linguist.admin.filters.type-options.original'),
+                                own: app.translator.trans('fof-linguist.admin.filters.type-options.own'),
+                            }
+                        }),
+                        m('p', app.translator.trans('fof-linguist.admin.filters.missing-middle-label')),
+                    ]),
+                    ...localesAsArray().map(
+                        locale => Button.component({
+                            className: 'Button',
+                            icon: `far fa-${this.filters.missingTranslationsInLocale === locale.key ? 'check-square' : 'square'}`,
+                            onclick: () => {
+                                if (this.filters.missingTranslationsInLocale === locale.key) {
+                                    this.filters.missingTranslationsInLocale = null
+                                } else {
+                                    this.filters.missingTranslationsInLocale = locale.key;
+                                }
+
+                                this.applyFilters();
+                            },
+                        }, locale.name + ' (' + locale.key + ')')
+                    ),
+                ]),
             ]),
             m('div', keys.map(stringKey => m(StringKey, {
                 key: stringKey.id(),
@@ -202,6 +221,13 @@ export default class LinguistStringsPage extends Page {
 
         const keysWithCustomTranslations = app.store.all('fof-linguist-string').map(string => string.key());
 
+        const keysWithCustomTranslationsIn = {};
+        localesAsArray().forEach(locale => {
+            keysWithCustomTranslationsIn[locale.key] = app.store.all('fof-linguist-string')
+                .filter(string => string.locale() === locale.key)
+                .map(string => string.key());
+        });
+
         let lowercaseSearch = '';
 
         if (this.filters.search) {
@@ -213,14 +239,29 @@ export default class LinguistStringsPage extends Page {
                 return false;
             }
 
-            for (let locale of this.filters.withOriginalTranslationsInLocales) {
-                if (!key.locales().hasOwnProperty(locale)) {
-                    return false;
-                }
-            }
+            if (this.filters.missingTranslationsInLocale) {
+                let hasOriginalTranslation = key.locales().hasOwnProperty(this.filters.missingTranslationsInLocale);
+                let hasOwnTranslation = keysWithCustomTranslationsIn[this.filters.missingTranslationsInLocale].indexOf(key.key()) !== -1;
 
-            for (let locale of this.filters.withoutOriginalTranslationsInLocales) {
-                if (key.locales().hasOwnProperty(locale)) {
+                let matchesType = false;
+
+                switch (this.filters.missingTranslationsType) {
+                    case 'any':
+                        matchesType = hasOriginalTranslation || hasOwnTranslation;
+                        break;
+                    case 'original':
+                        matchesType = hasOriginalTranslation;
+                        break;
+                    case 'own':
+                        matchesType = hasOwnTranslation;
+                        break;
+                }
+
+                if (this.filters.missingTranslationsNegation === 'without') {
+                    matchesType = !matchesType;
+                }
+
+                if (!matchesType) {
                     return false;
                 }
             }
