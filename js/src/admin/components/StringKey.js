@@ -1,20 +1,21 @@
-import Component from 'flarum/Component';
 import StringLocale from '../components/StringLocale';
 import localesAsArray from '../utils/localesAsArray';
 import highlightMithril from '../utils/highlightMithril';
 
-export default class StringKey extends Component {
-    view() {
+/* global m */
+
+export default class StringKey {
+    view(vnode) {
         const {
             stringKey,
             highlight,
             onchange,
-        } = this.props;
+        } = vnode.attrs;
 
         return m('.FoF-Linguist-Key', [
             m('.FoF-Linguist-Key-Code', m('code', highlightMithril(stringKey.key(), highlight))),
             m('.FoF-Linguist-Locales', [
-                localesAsArray().map(locale => m(StringLocale, {
+                ...localesAsArray().map(locale => m(StringLocale, {
                     key: locale.key,
                     locale,
                     stringKey,

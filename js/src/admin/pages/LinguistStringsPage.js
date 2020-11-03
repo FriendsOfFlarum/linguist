@@ -1,5 +1,5 @@
 import app from 'flarum/app';
-import Component from 'flarum/Component';
+import Page from 'flarum/components/Page';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
 import ExtensionsPage from 'flarum/components/ExtensionsPage';
@@ -9,10 +9,14 @@ import extractText from 'flarum/utils/extractText';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 
+/* global m */
+
 const RESULTS_PER_PAGE = 20;
 
-export default class LinguistStringsPane extends Component {
-    init() {
+export default class LinguistStringsPage extends Page {
+    oninit(vnode) {
+        super.oninit(vnode);
+
         this.numberOfResultsToShow = RESULTS_PER_PAGE;
 
         this.filters = {
@@ -27,7 +31,7 @@ export default class LinguistStringsPane extends Component {
 
         this.extensions = [];
 
-        m.sync([
+        Promise.all([
             app.request({
                 method: 'GET',
                 url: app.forum.attribute('apiUrl') + '/fof/linguist/strings',
@@ -64,35 +68,29 @@ export default class LinguistStringsPane extends Component {
         const keys = this.results.slice(0, this.numberOfResultsToShow);
 
         return m('.container', [
-            m('div', { // The div with key needs to be outside of the ternary operation because null would break DOM ordering
-                key: 'clear-cache',
-            }, app.data.settings['fof.linguist.should-clear-cache'] === '1' ? Alert.component({
-                children: app.translator.trans('fof-linguist.admin.clear-cache.text'),
+            // Additional divs are used to reduce Mithril redraws as much as possible when the conditional components appear
+            m('div', app.data.settings['fof.linguist.should-clear-cache'] === '1' ? Alert.component({
                 dismissible: false,
                 controls: [Button.component({
                     className: 'Button Button--link',
                     onclick() {
                         // Same logic as in core StatusWidget
-                        app.modal.show(new LoadingModal());
+                        app.modal.show(LoadingModal);
 
                         app.request({
                             method: 'DELETE',
                             url: app.forum.attribute('apiUrl') + '/cache',
                         }).then(() => window.location.reload());
                     },
-                    children: app.translator.trans('fof-linguist.admin.clear-cache.button'),
-                })],
-            }) : null),
-            m('.FoF-Linguist-Filters', {
-                key: 'filters',
-            }, [
+                }, app.translator.trans('fof-linguist.admin.clear-cache.button'))],
+            }, app.translator.trans('fof-linguist.admin.clear-cache.text')) : null),
+            m('.FoF-Linguist-Filters', [
                 m('input.FormControl', {
-                    key: 'search',
                     value: this.filters.search,
-                    oninput: m.withAttr('value', value => {
-                        this.filters.search = value;
+                    oninput: event => {
+                        this.filters.search = event.target.value;
                         this.applyFilters();
-                    }),
+                    },
                     placeholder: app.translator.trans('fof-linguist.admin.filters.search'),
                 }),
                 Button.component({
@@ -173,7 +171,7 @@ export default class LinguistStringsPane extends Component {
                     }, locale.name + ' (' + locale.key + ')')
                 )),
             ]),
-            keys.map(stringKey => m(StringKey, {
+            m('div', keys.map(stringKey => m(StringKey, {
                 key: stringKey.id(),
                 stringKey,
                 highlight: this.filters.search,
@@ -182,10 +180,8 @@ export default class LinguistStringsPane extends Component {
                     // if we navigate away and back to the Linguist page without refreshing the admin panel
                     app.data.settings['fof.linguist.should-clear-cache'] = '1';
                 },
-            })),
-            m('.FoF-Linguist-Results', {
-                key: 'results-stats',
-            }, [
+            }))),
+            m('.FoF-Linguist-Results', [
                 app.translator.trans('fof-linguist.admin.filters.results', {
                     shown: keys.length + '', // cast to string otherwise number isn't displayed
                     total: this.results.length + '',

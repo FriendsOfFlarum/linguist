@@ -1,3 +1,5 @@
+/* global m */
+
 const HIGHLIGHT_DELIMITER = '<fof-highlight>';
 
 // Takes a string and highlight a keyword with a span with mithril template

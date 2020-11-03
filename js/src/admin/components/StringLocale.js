@@ -1,13 +1,14 @@
 import app from 'flarum/app';
-import Component from 'flarum/Component';
 import ItemList from 'flarum/utils/ItemList';
 import Button from 'flarum/components/Button';
 import highlightMithril from '../utils/highlightMithril';
 
-export default class StringLocale extends Component {
-    init() {
-        this.stringKey = this.props.stringKey;
-        this.locale = this.props.locale;
+/* global m */
+
+export default class StringLocale {
+    oninit(vnode) {
+        this.stringKey = vnode.attrs.stringKey;
+        this.locale = vnode.attrs.locale;
         this.localeKey = this.locale ? this.locale.key : null;
         this.originalString = this.localeKey && this.stringKey.locales().hasOwnProperty(this.localeKey) ? this.stringKey.locales()[this.localeKey] : null;
 
@@ -26,7 +27,7 @@ export default class StringLocale extends Component {
         }
     }
 
-    view() {
+    view(vnode) {
         const placeholderText = this.originalString ? this.originalString : '(' + app.translator.trans('fof-linguist.admin.placeholder.' + (this.localeKey ? 'not-translated' : 'all-locales')) + ')';
 
         return m('.FoF-Linguist-Locale', [
@@ -39,25 +40,25 @@ export default class StringLocale extends Component {
                     m(this.inputType, {
                         className: 'FormControl FoF-Linguist-Input',
                         value: this.value,
-                        oninput: m.withAttr('value', value => {
-                            this.value = value;
+                        oninput: event => {
+                            this.value = event.target.value;
                             this.dirty = true;
 
                             // Remove dirty state if the user erased his text without saving
                             if (!this.value && !this.string) {
                                 this.dirty = false;
                             }
-                        }),
+                        },
                         disabled: this.processing,
                     }),
                     m('.FoF-Linguist-Placeholder', [
                         m('span.FoF-Linguist-Placeholder-Hint', app.translator.trans('fof-linguist.admin.placeholder.hint')),
                         ' ',
-                        m('span', this.originalString ? highlightMithril(placeholderText, this.props.highlight) : placeholderText),
+                        m('span', this.originalString ? highlightMithril(placeholderText, vnode.attrs.highlight) : placeholderText),
                     ]),
                 ]),
             ]),
-            m('.FoF-Linguist-Controls', this.actions().toArray()),
+            m('.FoF-Linguist-Controls', this.actions(vnode.attrs.onchange).toArray()),
         ]);
     }
 
@@ -69,50 +70,47 @@ export default class StringLocale extends Component {
         }
     }
 
-    actions() {
+    actions(onchange) {
         const items = new ItemList();
 
         items.add('apply', Button.component({
             type: 'button',
             className: 'Button Button--primary',
-            children: app.translator.trans('fof-linguist.admin.buttons.apply'),
             loading: this.processing,
             disabled: !this.dirty,
             onclick: () => {
-                this.saveString();
+                this.saveString(onchange);
             },
-        }));
+        }, app.translator.trans('fof-linguist.admin.buttons.apply')));
 
         items.add('reset', Button.component({
             type: 'button',
             className: 'Button',
-            children: app.translator.trans('fof-linguist.admin.buttons.reset'),
             loading: this.processing,
             disabled: !this.dirty && !this.string,
             onclick: () => {
-                this.deleteString();
+                this.deleteString(onchange);
             },
-        }));
+        }, app.translator.trans('fof-linguist.admin.buttons.reset')));
 
         if (this.originalString) {
             items.add('copy-original', Button.component({
                 type: 'button',
                 className: 'Button',
-                children: app.translator.trans('fof-linguist.admin.buttons.copy-original'),
                 loading: this.processing,
                 onclick: () => {
                     this.value = this.originalString;
                     this.dirty = true;
                 },
-            }));
+            }, app.translator.trans('fof-linguist.admin.buttons.copy-original')));
         }
 
         return items;
     }
 
-    saveString() {
+    saveString(onchange) {
         if (!this.value) {
-            this.deleteString();
+            this.deleteString(onchange);
 
             return;
         }
@@ -137,7 +135,7 @@ export default class StringLocale extends Component {
             this.processing = false;
             this.dirty = false;
 
-            this.props.onchange();
+            onchange();
 
             m.redraw();
         }).catch(err => {
@@ -147,7 +145,7 @@ export default class StringLocale extends Component {
         });
     }
 
-    deleteString() {
+    deleteString(onchange) {
         if (this.string) {
             this.processing = true;
 
@@ -158,7 +156,7 @@ export default class StringLocale extends Component {
                 this.string = null;
                 this.value = '';
 
-                this.props.onchange();
+                onchange();
 
                 m.redraw();
             }).catch(err => {

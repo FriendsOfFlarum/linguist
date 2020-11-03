@@ -19,23 +19,11 @@ Also note Flarum uses a ["one place, one translation key"](https://flarum.org/do
 
 ## Installation
 
-Use [Bazaar](https://discuss.flarum.org/d/5151) or install manually:
-
 ```sh
 composer require fof/linguist
 ```
 
 ## Updating
-
-To the next minor version:
-
-```sh
-composer update fof/linguist
-php flarum migrate
-php flarum cache:clear
-```
-
-To the latest compatible version:
 
 ```sh
 composer require fof/linguist
