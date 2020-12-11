@@ -20,9 +20,15 @@ export default class StringLocale {
         this.dirty = false;
         this.processing = false;
 
+        // We check whether any original translation in any language has a newline
+        // By not hard-coding to English, this should work pretty well even if the fallback locale is modified,
+        // or if a text happens to not be available in the fallback language
+        const originalHasNewLine = Object.keys(this.stringKey.locales()).some(key => this.stringKey.locales()[key].indexOf('\n') !== -1);
+
         this.inputType = 'input';
 
-        if (this.value.indexOf('\n') !== -1 || (this.originalString && this.originalString.indexOf('\n') !== -1)) {
+        // We will enable multi-line editing if the original has a newline, or if the current custom value already has one
+        if (originalHasNewLine || this.value.indexOf('\n') !== -1) {
             this.inputType = 'textarea';
         }
     }
