@@ -1,8 +1,5 @@
 fof-linguist:
     admin:
-        menu:
-            title: Linguist
-            description: Customize translations.
         buttons:
             apply: Apply
             reset: Restore original
