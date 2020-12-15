@@ -18,10 +18,18 @@
     ],
     "support": {
         "issues": "https://github.com/FriendsOfFlarum/linguist/issues",
-        "source": "https://github.com/FriendsOfFlarum/linguist"
+        "source": "https://github.com/FriendsOfFlarum/linguist",
+        "forum": "https://discuss.flarum.org/d/7026"
     },
+    "homepage": "https://friendsofflarum.org",
+    "funding": [
+        {
+            "type": "website",
+            "url": "https://opencollective.com/fof/donate"
+        }
+    ],
     "require": {
-        "flarum/core": ">=0.1.0-beta.14 <0.1.0-beta.15"
+        "flarum/core": ">=0.1.0-beta.15 <0.1.0-beta.16"
     },
     "replace": {
         "flagrow/linguist": "*"
@@ -29,6 +37,7 @@
     "extra": {
         "flarum-extension": {
             "title": "FoF Linguist",
+            "category": "language",
             "icon": {
                 "name": "fas fa-italic",
                 "backgroundColor": "#e74c3c",
