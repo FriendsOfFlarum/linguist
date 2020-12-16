@@ -6,6 +6,7 @@ import Select from 'flarum/components/Select';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
 import extractText from 'flarum/utils/extractText';
+import isExtensionEnabled from 'flarum/utils/isExtensionEnabled';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 
@@ -49,7 +50,7 @@ export default class LinguistStringsPage extends ExtensionPage {
                     const extension = app.data.extensions[extensionId];
 
                     // We don't show disabled extensions and language packs
-                    if (!this.isEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
+                    if (!isExtensionEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
                         return;
                     }
 
