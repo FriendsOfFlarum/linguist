@@ -1,12 +1,12 @@
 import app from 'flarum/app';
-import Page from 'flarum/components/Page';
+import ExtensionPage from 'flarum/components/ExtensionPage';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
 import Select from 'flarum/components/Select';
-import ExtensionsPage from 'flarum/components/ExtensionsPage';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
 import extractText from 'flarum/utils/extractText';
+import isExtensionEnabled from 'flarum/utils/isExtensionEnabled';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 
@@ -14,7 +14,7 @@ import StringKey from '../components/StringKey';
 
 const RESULTS_PER_PAGE = 20;
 
-export default class LinguistStringsPage extends Page {
+export default class LinguistStringsPage extends ExtensionPage {
     oninit(vnode) {
         super.oninit(vnode);
 
@@ -50,7 +50,7 @@ export default class LinguistStringsPage extends Page {
                     const extension = app.data.extensions[extensionId];
 
                     // We don't show disabled extensions and language packs
-                    if (!ExtensionsPage.prototype.isEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
+                    if (!isExtensionEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
                         return;
                     }
 
@@ -66,7 +66,7 @@ export default class LinguistStringsPage extends Page {
         });
     }
 
-    view() {
+    content() {
         const keys = this.results.slice(0, this.numberOfResultsToShow);
 
         return m('.container', [
