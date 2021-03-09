@@ -1,0 +1,41 @@
+.FoF-Linguist-Filters {
+    display: flex;
+    padding-top: 10px;
+}
+
+.FoF-Linguist-Filters > .Button:not(:first-child),
+.FoF-Linguist-Filters > .ButtonGroup:not(:first-child) {
+    margin-left: 10px;
+}
+
+.ExtensionPage.fof-linguist-Page {
+    .ExtensionInfo {
+        margin-left: 0;
+        flex-grow: 1;
+    }
+
+    .item-linguist-tabs {
+        margin-right: auto;
+    }
+
+    // Disable Flarum's input max width on the settings page
+    .ExtensionPage-settings input {
+        max-width: none;
+    }
+}
+
+.FoF-Linguist-Tabs {
+    margin: -15px 0;
+
+    a {
+        padding: 20px 10px;
+        border-radius: @border-radius @border-radius 0 0;
+        text-decoration: none;
+        font-size: 1.3em;
+        color: @text-color;
+
+        &.active, &:hover {
+            background: @body-bg;
+        }
+    }
+}

@@ -1,5 +1,8 @@
 fof-linguist:
     admin:
+        tabs:
+            strings: Strings
+            coverage: Coverage
         buttons:
             apply: Apply
             reset: Restore original
@@ -34,3 +37,27 @@ fof-linguist:
                 New translations have not yet been applied.
                 Note: clearing the cache can momentarily slow down your forum.
             button: Clear cache now
+        coverage:
+            column-options:
+                locale: By language
+                namespace: By frontend
+            total-options:
+                percent: Percent
+                count: Count
+            columns:
+                namespace: Namespace
+                total: Total
+                forum: Forum
+                admin: Admin
+                lib: Lib
+                ref: Ref
+                api: API
+            count:
+                percent: '{percent} %'
+                total: '{translated} / {total}'
+                details: '{total} total / {original} original / {custom} custom'
+            all-namespaces: All
+            apply-missing-filter: Show matching missing translations
+        known-namespace:
+            core: Flarum Core
+            validation: Validation Errors

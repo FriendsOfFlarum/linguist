@@ -1,75 +1,39 @@
 import app from 'flarum/app';
-import ExtensionPage from 'flarum/components/ExtensionPage';
 import Button from 'flarum/components/Button';
 import Dropdown from 'flarum/components/Dropdown';
 import Select from 'flarum/components/Select';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
-import extractText from 'flarum/utils/extractText';
-import isExtensionEnabled from 'flarum/utils/isExtensionEnabled';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
+import namespaceLabel from '../utils/namespaceLabel';
 
 /* global m */
 
 const RESULTS_PER_PAGE = 20;
 
-export default class LinguistStringsPage extends ExtensionPage {
+export default class StringsPage {
     oninit(vnode) {
-        super.oninit(vnode);
-
         this.numberOfResultsToShow = RESULTS_PER_PAGE;
 
-        this.filters = {
+        this.filters = Object.assign({
             search: '',
             withOwnTranslations: false,
             missingTranslationsNegation: 'without',
             missingTranslationsType: 'any',
-            missingTranslationsInLocales: [],
+            missingTranslationsInLocale: null,
             forExtension: null,
-        };
+        }, vnode.attrs.initialBrowseFilters || {});
 
         this.results = [];
 
-        this.extensions = [];
-
-        Promise.all([
-            app.request({
-                method: 'GET',
-                url: app.forum.attribute('apiUrl') + '/fof/linguist/strings',
-            }).then(result => {
-                app.store.pushPayload(result);
-            }),
-            app.request({
-                method: 'GET',
-                url: app.forum.attribute('apiUrl') + '/fof/linguist/string-keys',
-            }).then(result => {
-                const keys = app.store.pushPayload(result);
-
-                Object.keys(app.data.extensions).forEach(extensionId => {
-                    const extension = app.data.extensions[extensionId];
-
-                    // We don't show disabled extensions and language packs
-                    if (!isExtensionEnabled(extensionId) || extension.extra.hasOwnProperty('flarum-locale')) {
-                        return;
-                    }
-
-                    this.extensions.push({
-                        extension,
-                        // canBeTranslated means translations exist with that extension's ID as prefix
-                        canBeTranslated: keys.findIndex(key => key.key().indexOf(extensionId + '.') === 0) !== -1,
-                    });
-                });
-            }),
-        ]).then(() => {
-            this.applyFilters();
-        });
+        this.applyFilters();
     }
 
-    content() {
+    view(vnode) {
         const keys = this.results.slice(0, this.numberOfResultsToShow);
 
-        return m('.container', [
+        return [
             // Additional divs are used to reduce Mithril redraws as much as possible when the conditional components appear
             m('div', app.data.settings['fof.linguist.should-clear-cache'] === '1' ? Alert.component({
                 dismissible: false,
@@ -106,31 +70,20 @@ export default class LinguistStringsPage extends ExtensionPage {
                 Dropdown.component({
                     buttonClassName: 'Button' + (this.filters.forExtension ? ' FoF-Linguist-Filter--Selected' : ''),
                     label: app.translator.trans('fof-linguist.admin.filters.for-extension'),
-                }, this.extensions.map(
-                    extensionData => Button.component({
-                        className: 'Button' + (extensionData.canBeTranslated ? '' : ' disabled'),
-                        icon: `far fa-${this.filters.forExtension === extensionData.extension.id ? 'check-square' : 'square'}`,
+                }, vnode.attrs.namespaces.map(
+                    namespace => Button.component({
+                        className: 'Button',
+                        icon: `far fa-${this.filters.forExtension === namespace.namespace ? 'check-square' : 'square'}`,
                         onclick: event => {
-                            if (!extensionData.canBeTranslated) {
-                                event.stopPropagation();
-
-                                // Provide an explanation why some extensions might not be offered for translation
-                                alert(extractText(app.translator.trans('fof-linguist.admin.filters.for-extension-unavailable', {
-                                    namespace: extensionData.extension.id,
-                                })));
-
-                                return;
-                            }
-
-                            if (this.filters.forExtension === extensionData.extension.id) {
+                            if (this.filters.forExtension === namespace.namespace) {
                                 this.filters.forExtension = null;
                             } else {
-                                this.filters.forExtension = extensionData.extension.id;
+                                this.filters.forExtension = namespace.namespace;
                             }
 
                             this.applyFilters();
                         },
-                    }, extensionData.extension.extra['flarum-extension'].title)
+                    }, namespace.extension ? namespace.extension.extra['flarum-extension'].title : namespaceLabel(namespace.namespace))
                 )),
                 Dropdown.component({
                     buttonClassName: 'Button' + (this.filters.missingTranslationsInLocale ? ' FoF-Linguist-Filter--Selected' : ''),
@@ -213,7 +166,7 @@ export default class LinguistStringsPage extends ExtensionPage {
                     },
                 }, app.translator.trans('fof-linguist.admin.buttons.load-more')) : null),
             ]),
-        ]);
+        ];
     }
 
     applyFilters() {
