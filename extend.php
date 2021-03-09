@@ -17,7 +17,9 @@ return [
         ->get('/fof/linguist/strings', 'fof.linguist.api.strings.index', Controllers\StringIndexController::class)
         ->post('/fof/linguist/strings', 'fof.linguist.api.strings.store', Controllers\StringStoreController::class)
         ->patch('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.update', Controllers\StringUpdateController::class)
-        ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class),
+        ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class)
+        ->get('/fof/linguist/export', 'fof.linguist.api.export', Controllers\ExportController::class)
+        ->post('/fof/linguist/import', 'fof.linguist.api.import', Controllers\ImportController::class),
     new ClearCacheStatus(),
     new LoadStrings(),
 ];

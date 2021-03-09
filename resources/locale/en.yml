@@ -3,6 +3,8 @@ fof-linguist:
         tabs:
             strings: Strings
             coverage: Coverage
+            export: Export
+            import: Import
         buttons:
             apply: Apply
             reset: Restore original
@@ -58,6 +60,38 @@ fof-linguist:
                 details: '{total} total / {original} original / {custom} custom'
             all-namespaces: All
             apply-missing-filter: Show matching missing translations
+        export:
+            title: Export
+            warning: >
+                The export format uses Flarum's Yaml-based translation files and is designed to share translations between forums and with language pack maintainers.
+                The format is not designed to move all translations to a new forum.
+                Depending on your use case, copying the database directly might be a better idea.
+            locale: Locale
+            locale-all: Pseudo-locale "All"
+            namespace: Namespace
+            namespace-all: All
+            include-originals: Include original translations
+            include-all: Include translations defined for "All" languages
+            output: Output
+            output-loading: Loading output...
+            output-empty: Empty output
+            download: Download
+        import:
+            title: Import
+            input: Input
+            input-placeholder: Drag and drop or paste a Yaml file here
+            locale: Locale
+            locale-all: Pseudo-locale "All"
+            override-existing: Override my existing custom translations
+            submit: Import
+            results: >
+                The import is finished.
+                {imported} strings have been imported and {identical} identical strings were skipped.
+                The page will now refresh to show the new translations.
+            results-with-ignore: >
+                The import is finished.
+                {imported} strings have been imported, {ignored} existing strings have been ignored and {identical} identical strings were skipped.
+                The page will now refresh to show the new translations.
         known-namespace:
             core: Flarum Core
             validation: Validation Errors

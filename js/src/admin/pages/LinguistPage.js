@@ -3,6 +3,8 @@ import ExtensionPage from 'flarum/components/ExtensionPage';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import StringsPage from './StringsPage';
 import CoveragePage from './CoveragePage';
+import ExportPage from './ExportPage';
+import ImportPage from './ImportPage';
 
 /* global m */
 
@@ -95,6 +97,18 @@ export default class LinguistPage extends ExtensionPage {
                     this.tab = 'coverage';
                 },
             }, app.translator.trans('fof-linguist.admin.tabs.coverage'))),
+            m('li', m('a', {
+                className: this.tab === 'export' ? 'active' : '',
+                onclick: () => {
+                    this.tab = 'export';
+                },
+            }, app.translator.trans('fof-linguist.admin.tabs.export'))),
+            m('li', m('a', {
+                className: this.tab === 'import' ? 'active' : '',
+                onclick: () => {
+                    this.tab = 'import';
+                },
+            }, app.translator.trans('fof-linguist.admin.tabs.import'))),
         ]), 100);
 
         return items;
@@ -119,6 +133,12 @@ export default class LinguistPage extends ExtensionPage {
                         this.tab = 'strings';
                     },
                 });
+            case 'export':
+                return m(ExportPage, {
+                    namespaces: this.namespaces,
+                });
+            case 'import':
+                return m(ImportPage);
         }
 
         return null;
