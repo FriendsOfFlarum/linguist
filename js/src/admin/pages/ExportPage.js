@@ -96,7 +96,9 @@ export default class ExportPage {
                         className: 'Button Button--primary',
                         href: this.exportUrl(),
                         external: true,
-                        download: this.locale + '.yml',
+                        // If a namespace is selected, we use it as filename (language pack convention)
+                        // otherwise we use the locale as filename (extension convention)
+                        download: (this.namespace || this.locale) + '.yml',
                     }, app.translator.trans('fof-linguist.admin.export.download')),
                 ]),
                 m('textarea.FormControl.FoF-Export-Textarea', {
