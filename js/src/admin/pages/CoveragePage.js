@@ -3,12 +3,14 @@ import Button from 'flarum/components/Button';
 import icon from 'flarum/helpers/icon';
 import localesAsArray from '../utils/localesAsArray';
 import namespaceLabel from '../utils/namespaceLabel';
+import frontendLabel from '../utils/frontendLabel';
 
 /* global m */
 
 export default class CoveragePage {
     oninit() {
         this.columns = 'locale';
+        this.showAllFrontends = false;
         this.totalPercent = true;
         this.locale = [];
 
@@ -20,6 +22,14 @@ export default class CoveragePage {
     }
 
     view(vnode) {
+        let visibleFrontends = vnode.attrs.frontends.slice(0, 2);
+
+        if (this.showAllFrontends) {
+            visibleFrontends = vnode.attrs.frontends;
+        }
+
+        const {browseWithFilters} = vnode.attrs;
+
         return [
             m('.FoF-Linguist-Filters', [
                 m('.ButtonGroup', [
@@ -47,6 +57,7 @@ export default class CoveragePage {
                         className: 'Button' + (this.columns === 'namespace' ? ' active' : ''),
                         onclick: () => {
                             this.columns = 'namespace';
+                            this.showAllFrontends = false;
                         },
                     }, app.translator.trans('fof-linguist.admin.coverage.column-options.namespace')),
                 ]),
@@ -65,12 +76,16 @@ export default class CoveragePage {
                 m('thead', m('tr', [
                     m('th', app.translator.trans('fof-linguist.admin.coverage.columns.namespace')),
                     this.columns === 'locale' ? localesAsArray().map(locale => m('th', locale.name + ' (' + locale.key + ')')) : [
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.total')),
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.forum')),
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.admin')),
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.lib')),
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.ref')),
-                        m('th', app.translator.trans('fof-linguist.admin.coverage.columns.api')),
+                        this.showAllFrontends ? visibleFrontends.map(frontend => m('th', frontendLabel(frontend))) : [
+                            m('th', app.translator.trans('fof-linguist.admin.coverage.columns.all-except-admin')),
+                            m('th', frontendLabel('admin')),
+                            m('th', Button.component({
+                                className: 'Button',
+                                onclick: () => {
+                                    this.showAllFrontends = true;
+                                },
+                            }, app.translator.trans('fof-linguist.admin.coverage.columns.all-frontends'))),
+                        ],
                     ],
                 ])),
                 m('tbody', [
@@ -79,14 +94,7 @@ export default class CoveragePage {
                             m('span.FoF-Linguist-Coverage-Extension-Icon.FoF-Linguist-Coverage-Namespace-Icon'),
                             m('span.FoF-Linguist-Coverage-Extension-Title', app.translator.trans('fof-linguist.admin.coverage.all-namespaces')),
                         ]),
-                        localesAsArray().map(locale => m('td', m('.FoF-Linguist-Coverage-Progress-Wrap', [
-                            this.localeCoverage('', locale.key),
-                            this.filterButton(() => {
-                                vnode.attrs.browseWithFilters({
-                                    missingTranslationsInLocale: locale.key,
-                                });
-                            }),
-                        ]))),
+                        localesAsArray().map(locale => m('td', this.localeCoverage(browseWithFilters, locale.key))),
                     ]) : null,
                     vnode.attrs.namespaces.map(namespace => {
                         return m('tr', [
@@ -99,29 +107,12 @@ export default class CoveragePage {
                                 m('span.FoF-Linguist-Coverage-Extension-Icon.FoF-Linguist-Coverage-Namespace-Icon'),
                                 m('span.FoF-Linguist-Coverage-Extension-Title', namespaceLabel(namespace.namespace)),
                             ]),
-                            this.columns === 'locale' ? localesAsArray().map(locale => m('td', m('.FoF-Linguist-Coverage-Progress-Wrap', [
-                                this.localeCoverage(namespace.namespace + '.', locale.key),
-                                this.filterButton(() => {
-                                    vnode.attrs.browseWithFilters({
-                                        forExtension: namespace.namespace,
-                                        missingTranslationsInLocale: locale.key,
-                                    });
-                                }),
-                            ]))) : [
-                                m('td', m('.FoF-Linguist-Coverage-Progress-Wrap', [
-                                    this.prefixCoverage(namespace.namespace + '.'),
-                                    this.filterButton(() => {
-                                        vnode.attrs.browseWithFilters({
-                                            forExtension: namespace.namespace,
-                                            missingTranslationsInLocale: this.locale,
-                                        });
-                                    }),
-                                ])),
-                                m('td', this.prefixCoverage(namespace.namespace + '.forum.')),
-                                m('td', this.prefixCoverage(namespace.namespace + '.admin.')),
-                                m('td', this.prefixCoverage(namespace.namespace + '.lib.')),
-                                m('td', this.prefixCoverage(namespace.namespace + '.ref.')),
-                                m('td', this.prefixCoverage(namespace.namespace + '.api.')),
+                            this.columns === 'locale' ? localesAsArray().map(locale => m('td', this.localeCoverage(browseWithFilters, locale.key, namespace.namespace))) : [
+                                this.showAllFrontends ?
+                                    visibleFrontends.map(frontend => m('td', this.prefixCoverage(browseWithFilters, namespace.namespace, frontend))) : [
+                                        m('td', this.prefixCoverage(browseWithFilters, namespace.namespace, '_all_except_admin')),
+                                        m('td', this.prefixCoverage(browseWithFilters, namespace.namespace, 'admin')),
+                                    ],
                             ],
                         ]);
                     }),
@@ -130,16 +121,36 @@ export default class CoveragePage {
         ];
     }
 
-    prefixCoverage(prefix) {
+    prefixCoverage(browseWithFilters, namespace, frontend) {
         if (!this.locale) {
             return null;
         }
 
-        return this.localeCoverage(prefix, this.locale);
+        return this.localeCoverage(browseWithFilters, this.locale, namespace, frontend);
     }
 
-    localeCoverage(prefix, locale) {
-        const stringKeys = app.store.all('fof-linguist-string-key').filter(key => key.key().indexOf(prefix) === 0);
+    localeCoverage(browseWithFilters, locale, namespace, frontend) {
+        const stringKeys = app.store.all('fof-linguist-string-key').filter(key => {
+            if (!namespace) {
+                return true;
+            }
+
+            const parts = key.key().split('.');
+
+            if (parts[0] !== namespace) {
+                return false;
+            }
+
+            if (frontend === '_all_except_admin') {
+                if (parts.length >= 2 && parts[1] === 'admin') {
+                    return false;
+                }
+            } else if (frontend && (parts.length < 2 || parts[1] !== frontend)) {
+                return false;
+            }
+
+            return true;
+        });
 
         if (stringKeys.length === 0) {
             return '-';
@@ -183,20 +194,42 @@ export default class CoveragePage {
             });
         }
 
-        return m('.FoF-Linguist-Progress', {
-            className: specialStyle ? 'FoF-Linguist-Progress--' + specialStyle : '',
-        }, [
-            m('.FoF-Linguist-Progress-Bar', {
-                style: {
-                    width: Math.max(percent, 5) + '%', // Always show the progress bar even if very close to 0
+        return m('.FoF-Linguist-Coverage-Progress-Wrap', [
+            m('.FoF-Linguist-Progress', {
+                className: specialStyle ? 'FoF-Linguist-Progress--' + specialStyle : '',
+            }, [
+                m('.FoF-Linguist-Progress-Bar', {
+                    style: {
+                        width: Math.max(percent, 5) + '%', // Always show the progress bar even if very close to 0
+                    },
+                }),
+                m('.FoF-Linguist-Progress-Label', label),
+                m('.FoF-Linguist-Progress-More', app.translator.trans('fof-linguist.admin.coverage.count.details', {
+                    total: stringKeys.length,
+                    original: originalCount + '', // Cast to string to preserve zero
+                    custom: customCount + '',
+                })),
+            ]),
+            Button.component({
+                icon: 'fas fa-filter',
+                className: 'Button Button--icon',
+                onclick: () => {
+                    const options = {
+                        missingTranslationsInLocale: locale,
+                    };
+
+                    if (namespace) {
+                        options.forExtension = namespace;
+                    }
+
+                    if (frontend) {
+                        options.frontend = frontend;
+                    }
+
+                    browseWithFilters(options);
                 },
+                title: app.translator.trans('fof-linguist.admin.coverage.apply-missing-filter'),
             }),
-            m('.FoF-Linguist-Progress-Label', label),
-            m('.FoF-Linguist-Progress-More', app.translator.trans('fof-linguist.admin.coverage.count.details', {
-                total: stringKeys.length,
-                original: originalCount + '', // Cast to string to preserve zero
-                custom: customCount + '',
-            })),
         ]);
     }
 

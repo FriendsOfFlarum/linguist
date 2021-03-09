@@ -1,15 +1,16 @@
 .FoF-Linguist-Coverage {
-    width: 100%;
-
     th, td {
         border-collapse: collapse;
-        padding: 4px 5px;
+        padding: 4px 15px;
     }
 
     td {
         border-bottom: 2px solid #dedede;
-        vertical-align: top;
         vertical-align: middle;
+
+        &:first-child {
+            min-width: 250px;
+        }
     }
 
     th {
@@ -43,7 +44,7 @@
 .FoF-Linguist-Progress {
     position: relative;
     display: inline-block;
-    width: 200px;
+    width: 240px;
     height: 20px;
     background: #efefef;
     border-radius: 4px;
@@ -62,7 +63,10 @@
 
 .FoF-Linguist-Progress-Bar {
     height: 20px;
-    background: orange;
+    // Color copied from Flarum variables
+    // But copied over because we don't want themes to change it
+    // That's because depending on the % shown the background will be either this or grey so we need to be sure the text color stays readable
+    background: #fff2ae; // Same as @alert-bg
 }
 
 .FoF-Linguist-Progress--full {
@@ -75,10 +79,7 @@
 
 .FoF-Linguist-Progress--low {
     .FoF-Linguist-Progress-Bar {
-        // Color copied from Flarum's alert-error variable
-        // But copied over because we don't want themes to change it
-        // That's because depending on the % shown the background will be either this or grey so we need to be sure the text color stays readable
-        background: #d83e3e;
+        background: #d83e3e; // Same as @alert-error-bg
     }
 }
 

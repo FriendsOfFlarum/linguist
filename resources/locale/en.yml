@@ -1,7 +1,7 @@
 fof-linguist:
     admin:
         tabs:
-            strings: Strings
+            strings: Translations
             coverage: Coverage
             export: Export
             import: Import
@@ -29,10 +29,8 @@ fof-linguist:
                 original: Original
                 own: Custom
             for-extension: For extension
-            for-extension-unavailable: >
-                No translations were found in the expected namespace "{namespace}".
-                Maybe this extension doesn't have any text to translate or is using a different namespace.
-                Try using the search field to locate its translations.
+            frontend: For frontend
+            frontend-all-except-admin: All except Admin
             results: Showing {shown} of {total} matching translations
         clear-cache:
             text: >
@@ -49,11 +47,8 @@ fof-linguist:
             columns:
                 namespace: Namespace
                 total: Total
-                forum: Forum
-                admin: Admin
-                lib: Lib
-                ref: Ref
-                api: API
+                all-except-admin: Forum and other frontends
+                all-frontends: Show all frontends
             count:
                 percent: '{percent} %'
                 total: '{translated} / {total}'
@@ -95,3 +90,9 @@ fof-linguist:
         known-namespace:
             core: Flarum Core
             validation: Validation Errors
+        known-frontend:
+            forum: Forum
+            admin: Admin
+            lib: Lib (used on both Forum and Admin)
+            ref: Ref (re-used in other keys)
+            api: API

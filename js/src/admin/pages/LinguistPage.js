@@ -14,7 +14,14 @@ export default class LinguistPage extends ExtensionPage {
 
         this.tab = 'strings';
         this.ready = false;
-        this.namespaces = [];
+        this.namespaces = []; // First level of translation keys. Usually an extension ID, but also core and validation
+        this.frontends = [
+            'forum',
+            'admin',
+            'lib',
+            'ref',
+            'api',
+        ]; // Second level of translation keys: forum, admin, ...
         this.initialBrowseFilters = {};
 
         Promise.all([
@@ -33,10 +40,20 @@ export default class LinguistPage extends ExtensionPage {
                 const namespaces = [];
 
                 keys.forEach(key => {
-                    const namespace = key.key().split('.')[0];
+                    const parts = key.key().split('.');
+
+                    const namespace = parts[0];
 
                     if (['core', 'validation'].indexOf(namespace) === -1 && namespaces.indexOf(namespace) === -1) {
                         namespaces.push(namespace);
+                    }
+
+                    if (parts.length > 1 && namespace !== 'validation') {
+                        const frontend = parts[1];
+
+                        if (this.frontends.indexOf(frontend) === -1) {
+                            this.frontends.push(frontend);
+                        }
                     }
                 });
 
@@ -123,11 +140,13 @@ export default class LinguistPage extends ExtensionPage {
             case 'strings':
                 return m(StringsPage, {
                     namespaces: this.namespaces,
+                    frontends: this.frontends,
                     initialBrowseFilters: this.initialBrowseFilters,
                 });
             case 'coverage':
                 return m(CoveragePage, {
                     namespaces: this.namespaces,
+                    frontends: this.frontends,
                     browseWithFilters: filters => {
                         this.initialBrowseFilters = filters;
                         this.tab = 'strings';

@@ -7,6 +7,7 @@ import LoadingModal from 'flarum/components/LoadingModal';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 import namespaceLabel from '../utils/namespaceLabel';
+import frontendLabel from '../utils/frontendLabel';
 
 /* global m */
 
@@ -23,6 +24,7 @@ export default class StringsPage {
             missingTranslationsType: 'any',
             missingTranslationsInLocale: null,
             forExtension: null,
+            frontend: null,
         }, vnode.attrs.initialBrowseFilters || {});
 
         this.results = [];
@@ -73,8 +75,8 @@ export default class StringsPage {
                 }, vnode.attrs.namespaces.map(
                     namespace => Button.component({
                         className: 'Button',
-                        icon: `far fa-${this.filters.forExtension === namespace.namespace ? 'check-square' : 'square'}`,
-                        onclick: event => {
+                        icon: `far fa-${this.filters.forExtension === namespace.namespace ? 'dot-circle' : 'circle'}`,
+                        onclick: () => {
                             if (this.filters.forExtension === namespace.namespace) {
                                 this.filters.forExtension = null;
                             } else {
@@ -84,6 +86,27 @@ export default class StringsPage {
                             this.applyFilters();
                         },
                     }, namespace.extension ? namespace.extension.extra['flarum-extension'].title : namespaceLabel(namespace.namespace))
+                )),
+                Dropdown.component({
+                    buttonClassName: 'Button' + (this.filters.frontend ? ' FoF-Linguist-Filter--Selected' : ''),
+                    label: app.translator.trans('fof-linguist.admin.filters.frontend'),
+                }, [
+                    '_all_except_admin',
+                    ...vnode.attrs.frontends,
+                ].map(
+                    frontend => Button.component({
+                        className: 'Button',
+                        icon: `far fa-${this.filters.frontend === frontend ? 'dot-circle' : 'circle'}`,
+                        onclick: () => {
+                            if (this.filters.frontend === frontend) {
+                                this.filters.frontend = null;
+                            } else {
+                                this.filters.frontend = frontend;
+                            }
+
+                            this.applyFilters();
+                        },
+                    }, frontend === '_all_except_admin' ? app.translator.trans('fof-linguist.admin.filters.frontend-all-except-admin') : frontendLabel(frontend))
                 )),
                 Dropdown.component({
                     buttonClassName: 'Button' + (this.filters.missingTranslationsInLocale ? ' FoF-Linguist-Filter--Selected' : ''),
@@ -222,6 +245,22 @@ export default class StringsPage {
             if (this.filters.forExtension) {
                 if (key.key().indexOf(this.filters.forExtension + '.') !== 0) {
                     return false;
+                }
+            }
+
+            if (this.filters.frontend) {
+                const parts = key.key().split('.');
+
+                if (this.filters.frontend === '_all_except_admin') {
+                    // We will keep everything that isn't admin, including if it's a single level deep
+                    if (parts.length >= 2 && parts[1] === 'admin') {
+                        return false;
+                    }
+                } else {
+                    // Keep only parts with 2 levels or more where second level matches frontend
+                    if (parts.length < 2 || parts[1] !== this.filters.frontend) {
+                        return false;
+                    }
                 }
             }
 
