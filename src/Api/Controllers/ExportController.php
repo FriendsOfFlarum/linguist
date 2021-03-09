@@ -54,9 +54,13 @@ class ExportController implements RequestHandlerInterface
              */
             $catalogue = app('translator')->getCatalogue($locale);
 
-            $originals = array_filter($catalogue->all('messages'), function ($key) use ($namespace) {
-                return Str::startsWith($key, $namespace . '.');
-            }, ARRAY_FILTER_USE_KEY);
+            $originals = $catalogue->all('messages');
+
+            if ($namespace) {
+                $originals = array_filter($originals, function ($key) use ($namespace) {
+                    return Str::startsWith($key, $namespace . '.');
+                }, ARRAY_FILTER_USE_KEY);
+            }
 
             // Complete base with original translations if they are not customized
             $translations = collect($originals)->merge($translations);
