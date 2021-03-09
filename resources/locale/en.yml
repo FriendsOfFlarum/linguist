@@ -10,6 +10,14 @@ fof-linguist:
             reset: Restore original
             copy-original: Copy original text
             load-more: Load more
+            delete-redundant: Delete redundant translations
+            delete-redundant-confirm: >
+                This will delete {count} translations that have identical original and custom values.
+                This can be useful to clean up after a language pack update.
+            delete-all: Delete all translations
+            delete-all-confirm: >
+                This will delete ALL of your {count} custom translations.
+                Make sure you have exported or backed up everything you might have wanted to keep.
         locales:
             all: All
         placeholder:
@@ -34,6 +42,7 @@ fof-linguist:
             for-extension: For extension
             frontend: For frontend
             frontend-all-except-admin: All except Admin
+            mass-edit: Mass edit
             results: Showing {shown} of {total} matching translations
         clear-cache:
             text: >

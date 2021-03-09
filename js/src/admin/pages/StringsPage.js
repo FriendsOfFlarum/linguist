@@ -4,6 +4,7 @@ import Dropdown from 'flarum/components/Dropdown';
 import Select from 'flarum/components/Select';
 import Alert from 'flarum/components/Alert';
 import LoadingModal from 'flarum/components/LoadingModal';
+import extractText from 'flarum/utils/extractText';
 import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 import namespaceLabel from '../utils/namespaceLabel';
@@ -180,6 +181,57 @@ export default class StringsPage {
                             },
                         }, locale.name + ' (' + locale.key + ')')
                     ),
+                ]),
+                Dropdown.component({
+                    buttonClassName: 'Button',
+                    label: app.translator.trans('fof-linguist.admin.filters.mass-edit'),
+                }, [
+                    Button.component({
+                        icon: 'far fa-clone',
+                        className: 'Button',
+                        onclick: () => {
+                            const strings = app.store.all('fof-linguist-string').filter(string => {
+                                const key = app.store.getById('fof-linguist-string-key', string.key());
+
+                                return key && key.locales()[string.locale()] === string.value();
+                            });
+
+                            if (confirm(extractText(app.translator.trans('fof-linguist.admin.buttons.delete-redundant-confirm', {
+                                count: strings.length + '',
+                            })))) {
+                                if (strings.length === 0) {
+                                    return;
+                                }
+
+                                app.modal.show(LoadingModal);
+
+                                Promise.all(strings.map(string => string.delete())).then(() => {
+                                    window.location.reload();
+                                });
+                            }
+                        },
+                    }, app.translator.trans('fof-linguist.admin.buttons.delete-redundant')),
+                    Button.component({
+                        icon: 'fas fa-trash',
+                        className: 'Button',
+                        onclick: () => {
+                            const strings = app.store.all('fof-linguist-string');
+
+                            if (confirm(extractText(app.translator.trans('fof-linguist.admin.buttons.delete-all-confirm', {
+                                count: strings.length + '',
+                            })))) {
+                                if (strings.length === 0) {
+                                    return;
+                                }
+
+                                app.modal.show(LoadingModal);
+
+                                Promise.all(strings.map(string => string.delete())).then(() => {
+                                    window.location.reload();
+                                });
+                            }
+                        },
+                    }, app.translator.trans('fof-linguist.admin.buttons.delete-all')),
                 ]),
             ]),
             m('div', keys.map(stringKey => m(StringKey, {
