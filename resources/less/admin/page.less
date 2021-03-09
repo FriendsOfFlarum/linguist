@@ -12,20 +12,43 @@
     .ExtensionInfo {
         margin-left: 0;
         flex-grow: 1;
+
+        > ul {
+            flex-wrap: wrap;
+        }
     }
 
     .item-linguist-tabs {
         margin-right: auto;
+        order: 99;
+        flex: 1 0 100%;
+
+        @media @desktop-up {
+            order: unset;
+            flex: 0 0 0;
+        }
     }
 
-    // Disable Flarum's input max width on the settings page
-    .ExtensionPage-settings input {
-        max-width: none;
+    .ExtensionPage-settings {
+        // Allow horizontal scrolling for the table in coverage tab
+        overflow-x: auto;
+
+        // Disable Flarum's input max width on the settings page
+        input {
+            max-width: none;
+        }
     }
 }
 
 .FoF-Linguist-Tabs {
-    margin: -15px 0;
+    // Needs specificity to override Flarum
+    .ExtensionPage .ExtensionPage-header & {
+        padding-top: 25px;
+
+        @media @desktop-up {
+            padding-top: 0;
+        }
+    }
 
     a {
         padding: 20px 10px;
