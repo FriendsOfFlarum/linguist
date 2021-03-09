@@ -8,6 +8,7 @@ import localesAsArray from '../utils/localesAsArray';
 import StringKey from '../components/StringKey';
 import namespaceLabel from '../utils/namespaceLabel';
 import frontendLabel from '../utils/frontendLabel';
+import booleanCheck from '../utils/booleanCheck';
 
 /* global m */
 
@@ -22,7 +23,8 @@ export default class StringsPage {
             withOwnTranslations: false,
             missingTranslationsNegation: 'without',
             missingTranslationsType: 'any',
-            missingTranslationsInLocale: null,
+            missingTranslationsOperation: 'or',
+            missingTranslationsInLocales: [],
             forExtension: null,
             frontend: null,
         }, vnode.attrs.initialBrowseFilters || {});
@@ -109,7 +111,7 @@ export default class StringsPage {
                     }, frontend === '_all_except_admin' ? app.translator.trans('fof-linguist.admin.filters.frontend-all-except-admin') : frontendLabel(frontend))
                 )),
                 Dropdown.component({
-                    buttonClassName: 'Button' + (this.filters.missingTranslationsInLocale ? ' FoF-Linguist-Filter--Selected' : ''),
+                    buttonClassName: 'Button' + (this.filters.missingTranslationsInLocales.length ? ' FoF-Linguist-Filter--Selected' : ''),
                     label: app.translator.trans('fof-linguist.admin.filters.missing'),
                 }, [
                     m('.FoF-Linguist-Missing-Filter', {
@@ -123,21 +125,21 @@ export default class StringsPage {
                             onchange: value => {
                                 this.filters.missingTranslationsNegation = value;
 
-                                if (this.filters.missingTranslationsInLocale) {
+                                if (this.filters.missingTranslationsInLocales.length) {
                                     this.applyFilters();
                                 }
                             },
                             options: {
                                 without: app.translator.trans('fof-linguist.admin.filters.negation-options.without'),
                                 with: app.translator.trans('fof-linguist.admin.filters.negation-options.with'),
-                            }
+                            },
                         }),
                         Select.component({
                             value: this.filters.missingTranslationsType,
                             onchange: value => {
                                 this.filters.missingTranslationsType = value;
 
-                                if (this.filters.missingTranslationsInLocale) {
+                                if (this.filters.missingTranslationsInLocales.length) {
                                     this.applyFilters();
                                 }
                             },
@@ -145,19 +147,33 @@ export default class StringsPage {
                                 any: app.translator.trans('fof-linguist.admin.filters.type-options.any'),
                                 original: app.translator.trans('fof-linguist.admin.filters.type-options.original'),
                                 own: app.translator.trans('fof-linguist.admin.filters.type-options.own'),
-                            }
+                            },
                         }),
                         m('p', app.translator.trans('fof-linguist.admin.filters.missing-middle-label')),
+                        Select.component({
+                            value: this.filters.missingTranslationsOperation,
+                            onchange: value => {
+                                this.filters.missingTranslationsOperation = value;
+
+                                if (this.filters.missingTranslationsInLocales.length) {
+                                    this.applyFilters();
+                                }
+                            },
+                            options: {
+                                or: app.translator.trans('fof-linguist.admin.filters.operation-options.or'),
+                                and: app.translator.trans('fof-linguist.admin.filters.operation-options.and'),
+                            },
+                        }),
                     ]),
                     ...localesAsArray().map(
                         locale => Button.component({
                             className: 'Button',
-                            icon: `far fa-${this.filters.missingTranslationsInLocale === locale.key ? 'check-square' : 'square'}`,
+                            icon: `far fa-${this.filters.missingTranslationsInLocales.indexOf(locale.key) !== -1 ? 'check-square' : 'square'}`,
                             onclick: () => {
-                                if (this.filters.missingTranslationsInLocale === locale.key) {
-                                    this.filters.missingTranslationsInLocale = null
+                                if (this.filters.missingTranslationsInLocales.indexOf(locale.key) !== -1) {
+                                    this.filters.missingTranslationsInLocales = this.filters.missingTranslationsInLocales.filter(key => key !== locale.key);
                                 } else {
-                                    this.filters.missingTranslationsInLocale = locale.key;
+                                    this.filters.missingTranslationsInLocales.push(locale.key);
                                 }
 
                                 this.applyFilters();
@@ -215,9 +231,21 @@ export default class StringsPage {
                 return false;
             }
 
-            if (this.filters.missingTranslationsInLocale) {
-                let hasOriginalTranslation = key.locales().hasOwnProperty(this.filters.missingTranslationsInLocale);
-                let hasOwnTranslation = keysWithCustomTranslationsIn[this.filters.missingTranslationsInLocale].indexOf(key.key()) !== -1;
+            if (this.filters.missingTranslationsInLocales.length) {
+                let operation = this.filters.missingTranslationsOperation;
+
+                // Because the whole operation is reversed at the end based on with or without,
+                // we actually need to make the opposite boolean computation on the "has<x>" variables
+                if (this.filters.missingTranslationsNegation === 'without') {
+                    operation = operation === 'or' ? 'and' : 'or';
+                }
+
+                const hasOriginalTranslation = booleanCheck(operation, this.filters.missingTranslationsInLocales.map(locale => {
+                    return key.locales().hasOwnProperty(locale);
+                }));
+                const hasOwnTranslation = booleanCheck(operation, this.filters.missingTranslationsInLocales.map(locale => {
+                    return keysWithCustomTranslationsIn[locale].indexOf(key.key()) !== -1;
+                }));
 
                 let matchesType = false;
 

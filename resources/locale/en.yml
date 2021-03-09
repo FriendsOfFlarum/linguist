@@ -28,6 +28,9 @@ fof-linguist:
                 any: Original or Custom
                 original: Original
                 own: Custom
+            operation-options:
+                or: Either of
+                and: All of
             for-extension: For extension
             frontend: For frontend
             frontend-all-except-admin: All except Admin

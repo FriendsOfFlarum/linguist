@@ -215,7 +215,7 @@ export default class CoveragePage {
                 className: 'Button Button--icon',
                 onclick: () => {
                     const options = {
-                        missingTranslationsInLocale: locale,
+                        missingTranslationsInLocales: [locale],
                     };
 
                     if (namespace) {
@@ -231,16 +231,5 @@ export default class CoveragePage {
                 title: app.translator.trans('fof-linguist.admin.coverage.apply-missing-filter'),
             }),
         ]);
-    }
-
-    filterButton(callback) {
-        return Button.component({
-            icon: 'fas fa-filter',
-            className: 'Button Button--icon',
-            onclick: () => {
-                callback();
-            },
-            title: app.translator.trans('fof-linguist.admin.coverage.apply-missing-filter'),
-        })
     }
 }
