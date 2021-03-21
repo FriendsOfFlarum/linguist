@@ -1,7 +1,7 @@
 import app from 'flarum/app';
-import Select from 'flarum/components/Select';
-import Switch from 'flarum/components/Switch';
-import LinkButton from 'flarum/components/LinkButton';
+import Select from 'flarum/common/components/Select';
+import Switch from 'flarum/common/components/Switch';
+import LinkButton from 'flarum/common/components/LinkButton';
 import localesAsArray from '../utils/localesAsArray';
 import namespaceLabel from '../utils/namespaceLabel';
 

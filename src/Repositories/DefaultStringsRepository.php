@@ -13,21 +13,18 @@ class DefaultStringsRepository
 {
     protected $settings;
     protected $events;
+    protected $manager;
 
-    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events)
+    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, LocaleManager $manager)
     {
         $this->settings = $settings;
         $this->events = $events;
+        $this->manager = $manager;
     }
 
     public function allTranslations()
     {
-        /**
-         * @var $manager LocaleManager
-         */
-        $manager = app(LocaleManager::class);
-
-        $translator = $manager->getTranslator();
+        $translator = $this->manager->getTranslator();
 
         // Use our own cache factory that will force a fresh catalog load and not write it to file.
         // This allows us to get fresh original strings without the Linguist-defined ones without
@@ -41,7 +38,7 @@ class DefaultStringsRepository
         // We disable our own translation loader so custom strings don't replace original ones
         TranslationLock::stopLoadingTranslations();
 
-        foreach (array_keys($manager->getLocales()) as $locale) {
+        foreach (array_keys($this->manager->getLocales()) as $locale) {
             foreach (Arr::get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
                 if (!Arr::has($translations, $key)) {
                     $translations[$key] = [

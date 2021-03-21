@@ -9,20 +9,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class StringRepository
 {
-    /**
-     * @var TextString
-     */
     protected $textString;
-
-    /**
-     * @var StringValidator
-     */
     protected $validator;
+    protected $settings;
 
-    public function __construct(TextString $textString, StringValidator $validator)
+    public function __construct(TextString $textString, StringValidator $validator, SettingsRepositoryInterface $settings)
     {
         $this->textString = $textString;
         $this->validator = $validator;
+        $this->settings = $settings;
     }
 
     protected function query()
@@ -97,12 +92,7 @@ class StringRepository
 
     protected function cacheShouldBeCleared()
     {
-        /**
-         * @var $settings SettingsRepositoryInterface
-         */
-        $settings = app(SettingsRepositoryInterface::class);
-
         // This flags lets the frontend know it should suggest to the user to clear the cache
-        $settings->set('fof.linguist.should-clear-cache', '1');
+        $this->settings->set('fof.linguist.should-clear-cache', '1');
     }
 }

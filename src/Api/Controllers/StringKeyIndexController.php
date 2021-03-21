@@ -12,15 +12,17 @@ class StringKeyIndexController extends AbstractListController
 {
     public $serializer = StringKeySerializer::class;
 
+    protected $repository;
+
+    public function __construct(DefaultStringsRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $request->getAttribute('actor')->assertAdmin();
 
-        /**
-         * @var $repository DefaultStringsRepository
-         */
-        $repository = app(DefaultStringsRepository::class);
-
-        return $repository->allTranslations();
+        return $this->repository->allTranslations();
     }
 }

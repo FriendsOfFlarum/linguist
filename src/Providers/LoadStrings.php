@@ -1,25 +1,23 @@
 <?php
 
-namespace FoF\Linguist\Extenders;
+namespace FoF\Linguist\Providers;
 
-use Flarum\Extend\ExtenderInterface;
-use Flarum\Extension\Extension;
+use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Locale\LocaleManager;
 use FoF\Linguist\Translator\StringLoader;
-use Illuminate\Contracts\Container\Container;
 
-class LoadStrings implements ExtenderInterface
+class LoadStrings extends AbstractServiceProvider
 {
-    public function extend(Container $container, Extension $extension = null)
+    public function register()
     {
         // Other extensions register their translations via `resolving()`, so we need to use `afterResolving()`
         // to put our custom loader at the end to be able to override all translations
-        $container->afterResolving(
+        $this->container->afterResolving(
             LocaleManager::class,
             function (LocaleManager $locales) {
                 $translator = $locales->getTranslator();
 
-                $translator->addLoader('fof_linguist', app(StringLoader::class));
+                $translator->addLoader('fof_linguist', $this->container->make(StringLoader::class));
 
                 // Add the custom loader to every language available in Flarum
                 foreach ($locales->getLocales() as $locale => $name) {

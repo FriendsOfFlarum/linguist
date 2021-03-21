@@ -3,8 +3,7 @@
 namespace FoF\Linguist;
 
 use Flarum\Extend;
-use FoF\Linguist\Extenders\ClearCacheStatus;
-use FoF\Linguist\Extenders\LoadStrings;
+use Flarum\Foundation\Event\ClearingCache;
 use FoF\Linguist\Api\Controllers;
 
 return [
@@ -20,6 +19,10 @@ return [
         ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class)
         ->get('/fof/linguist/export', 'fof.linguist.api.export', Controllers\ExportController::class)
         ->post('/fof/linguist/import', 'fof.linguist.api.import', Controllers\ImportController::class),
-    new ClearCacheStatus(),
-    new LoadStrings(),
+
+    (new Extend\ServiceProvider())
+        ->register(Providers\LoadStrings::class),
+
+    (new Extend\Event())
+        ->listen(ClearingCache::class, Listeners\ClearCacheStatus::class),
 ];

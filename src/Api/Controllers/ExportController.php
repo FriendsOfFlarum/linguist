@@ -2,6 +2,7 @@
 
 namespace FoF\Linguist\Api\Controllers;
 
+use Flarum\Locale\Translator;
 use FoF\Linguist\TextString;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -9,11 +10,17 @@ use Laminas\Diactoros\Response\TextResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Yaml\Yaml;
 
 class ExportController implements RequestHandlerInterface
 {
+    protected $translator;
+
+    public function __construct(Translator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $request->getAttribute('actor')->assertAdmin();
@@ -49,10 +56,7 @@ class ExportController implements RequestHandlerInterface
         }
 
         if (Arr::get($request->getQueryParams(), 'includeOriginals') && $locale !== null) {
-            /**
-             * @var MessageCatalogueInterface $catalogue
-             */
-            $catalogue = app('translator')->getCatalogue($locale);
+            $catalogue = $this->translator->getCatalogue($locale);
 
             $originals = $catalogue->all('messages');
 

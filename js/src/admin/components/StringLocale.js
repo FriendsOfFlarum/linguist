@@ -1,6 +1,6 @@
 import app from 'flarum/app';
-import ItemList from 'flarum/utils/ItemList';
-import Button from 'flarum/components/Button';
+import ItemList from 'flarum/common/utils/ItemList';
+import Button from 'flarum/common/components/Button';
 import highlightMithril from '../utils/highlightMithril';
 
 /* global m */

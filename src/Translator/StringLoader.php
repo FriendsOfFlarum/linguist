@@ -9,6 +9,13 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class StringLoader implements LoaderInterface
 {
+    protected $repository;
+
+    public function __construct(StringRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @inheritdoc
      */
@@ -21,14 +28,9 @@ class StringLoader implements LoaderInterface
             return $catalog;
         }
 
-        /**
-         * @var $strings StringRepository
-         */
-        $strings = app(StringRepository::class);
-
         $messages = [];
 
-        foreach ($strings->stringsForLocale($locale) as $string) {
+        foreach ($this->repository->stringsForLocale($locale) as $string) {
             $messages[$string->key] = $string->value;
         }
 

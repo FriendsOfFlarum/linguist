@@ -1,8 +1,8 @@
 import app from 'flarum/app';
-import Button from 'flarum/components/Button';
-import Select from 'flarum/components/Select';
-import Switch from 'flarum/components/Switch';
-import extractText from 'flarum/utils/extractText';
+import Button from 'flarum/common/components/Button';
+import Select from 'flarum/common/components/Select';
+import Switch from 'flarum/common/components/Switch';
+import extractText from 'flarum/common/utils/extractText';
 import localesAsArray from '../utils/localesAsArray';
 
 /* global m */
