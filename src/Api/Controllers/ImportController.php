@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Api\Controllers;
 
 use Flarum\Foundation\ValidationException;
+use FoF\Linguist\Repositories\StringRepository;
 use FoF\Linguist\TextString;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -15,6 +16,13 @@ use Symfony\Component\Yaml\Yaml;
 
 class ImportController implements RequestHandlerInterface
 {
+    protected $repository;
+
+    public function __construct(StringRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $request->getAttribute('actor')->assertAdmin();
@@ -79,6 +87,10 @@ class ImportController implements RequestHandlerInterface
             $string->save();
 
             $totalImported++;
+        }
+
+        if ($totalImported > 0) {
+            $this->repository->cacheShouldBeCleared();
         }
 
         return new JsonResponse([
