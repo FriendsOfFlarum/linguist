@@ -6,12 +6,12 @@ use Flarum\Api\Serializer\AbstractSerializer;
 
 class StringSerializer extends AbstractSerializer
 {
-    public function getType($model)
+    public function getType($model): string
     {
         return 'fof-linguist-string';
     }
 
-    protected function getDefaultAttributes($model)
+    protected function getDefaultAttributes($model): array
     {
         return $model->toArray();
     }

@@ -6,7 +6,7 @@ use Flarum\Foundation\AbstractValidator;
 
 class StringValidator extends AbstractValidator
 {
-    protected function getRules()
+    protected function getRules(): array
     {
         return [
             'key' => 'required|string',

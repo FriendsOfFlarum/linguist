@@ -1,4 +1,4 @@
-import app from 'flarum/app';
+import app from 'flarum/admin/app';
 import StringKey from './models/StringKey';
 import TextString from './models/TextString';
 import LinguistPage from './pages/LinguistPage';
