@@ -1,4 +1,4 @@
-import app from 'flarum/app';
+import app from 'flarum/admin/app';
 import Button from 'flarum/common/components/Button';
 import icon from 'flarum/common/helpers/icon';
 import localesAsArray from '../utils/localesAsArray';

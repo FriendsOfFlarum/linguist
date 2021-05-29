@@ -90,7 +90,7 @@ class StringRepository
         $this->cacheShouldBeCleared();
     }
 
-    protected function cacheShouldBeCleared()
+    public function cacheShouldBeCleared()
     {
         // This flags lets the frontend know it should suggest to the user to clear the cache
         $this->settings->set('fof.linguist.should-clear-cache', '1');
