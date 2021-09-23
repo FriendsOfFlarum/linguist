@@ -7,7 +7,7 @@ import localesAsArray from '../utils/localesAsArray';
 
 /* global m */
 
-export default class ExportPage {
+export default class ImportPage {
     oninit() {
         this.locale = 'en';
         this.overrideExisting = true;
