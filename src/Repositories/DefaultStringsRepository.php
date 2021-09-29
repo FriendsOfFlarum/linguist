@@ -63,4 +63,28 @@ class DefaultStringsRepository
             return $key;
         });
     }
+
+    public function getTranslation($key)
+    {
+        // For detailed explanations of the different steps, see the `allTranslations`.
+        $translator = $this->manager->getTranslator();
+
+        $translator->setConfigCacheFactory(new NoOpConfigCacheFactory());
+
+        $translation = [
+            'key' => $key,
+            'locales' => [],
+        ];
+
+        TranslationLock::stopLoadingTranslations();
+
+        foreach (array_keys($this->manager->getLocales()) as $locale) {
+            $string = $translator->getCatalogue($locale)->get($key);
+            $translation['locales'][$locale] = (string)$string;
+        }
+
+        TranslationLock::continueLoadingTranslations();
+
+        return $translation;
+    }
 }

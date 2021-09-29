@@ -45,6 +45,14 @@ class StringRepository
     }
 
     /**
+     * @param $key
+     */
+    public function getByKey($key)
+    {
+        return $this->query()->where('key', $key)->get();
+    }
+
+    /**
      * @param array $attributes
      * @return TextString
      * @throws \Illuminate\Validation\ValidationException
