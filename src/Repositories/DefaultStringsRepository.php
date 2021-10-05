@@ -80,6 +80,9 @@ class DefaultStringsRepository
 
         foreach (array_keys($this->manager->getLocales()) as $locale) {
             $string = $translator->getCatalogue($locale)->get($key);
+            if ($string === $key) {
+                $string = null;
+            }
             $translation['locales'][$locale] = (string)$string;
         }
 
