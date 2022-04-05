@@ -10,6 +10,11 @@ return [
     (new Extend\Frontend('admin'))
         ->js(__DIR__.'/js/dist/admin.js')
         ->css(__DIR__.'/resources/less/admin.less'),
+
+    (new Extend\Frontend('backoffice'))
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
+
     new Extend\Locales(__DIR__ . '/resources/locale'),
     (new Extend\Routes('api'))
         ->get('/fof/linguist/string-keys', 'fof.linguist.api.string-keys.index', Controllers\StringKeyIndexController::class)
