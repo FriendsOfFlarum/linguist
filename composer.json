@@ -43,7 +43,10 @@
                 "name": "fas fa-italic",
                 "backgroundColor": "#e74c3c",
                 "color": "#fff"
-            }
+            },
+            "optional-dependencies": [
+                "flamarkt/backoffice"
+            ]
         },
         "flagrow": {
             "discuss": "https://discuss.flarum.org/d/7026"
