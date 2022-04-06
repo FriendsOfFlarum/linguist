@@ -2,9 +2,9 @@
     "private": true,
     "name": "@fof/linguist",
     "dependencies": {
-        "flarum-webpack-config": "^1.0",
-        "webpack": "^4.0",
-        "webpack-cli": "^3.0"
+        "flarum-webpack-config": "^2.0",
+        "webpack": "^5.0",
+        "webpack-cli": "^4.0"
     },
     "scripts": {
         "dev": "webpack --mode development --watch",
