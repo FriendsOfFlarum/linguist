@@ -38,7 +38,7 @@ class DefaultStringsRepository
         // We disable our own translation loader so custom strings don't replace original ones
         TranslationLock::stopLoadingTranslations();
 
-        foreach (array_keys($this->manager->getLocales()) as $locale) {
+        foreach ($this->localeKeys() as $locale) {
             foreach (Arr::get($translator->getCatalogue($locale)->all(), 'messages', []) as $key => $string) {
                 if (!Arr::has($translations, $key)) {
                     $translations[$key] = [
@@ -78,7 +78,7 @@ class DefaultStringsRepository
 
         TranslationLock::stopLoadingTranslations();
 
-        foreach (array_keys($this->manager->getLocales()) as $locale) {
+        foreach ($this->localeKeys() as $locale) {
             $string = $translator->getCatalogue($locale)->get($key);
             if ($string === $key) {
                 $string = null;
@@ -89,5 +89,19 @@ class DefaultStringsRepository
         TranslationLock::continueLoadingTranslations();
 
         return $translation;
+    }
+
+    protected function localeKeys(): array
+    {
+        $locales = array_keys($this->manager->getLocales());
+
+        // Always include English, even if the language pack has been disabled or removed
+        // This is necessary to show translations that aren't included in any of the currently enabled langue packs
+        // The absence of the language pack doesn't cause any issue, all translations from core and its extensions are not in the language pack anyway
+        if (!in_array('en', $locales)) {
+            $locales[] = 'en';
+        }
+
+        return $locales;
     }
 }
