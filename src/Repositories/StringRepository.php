@@ -2,7 +2,6 @@
 
 namespace FoF\Linguist\Repositories;
 
-use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\Linguist\TextString;
 use FoF\Linguist\Validators\StringValidator;
 use Illuminate\Database\Eloquent\Model;
@@ -11,13 +10,13 @@ class StringRepository
 {
     protected $textString;
     protected $validator;
-    protected $settings;
+    protected $cacheStatus;
 
-    public function __construct(TextString $textString, StringValidator $validator, SettingsRepositoryInterface $settings)
+    public function __construct(TextString $textString, StringValidator $validator, CacheStatusRepository $cacheStatus)
     {
         $this->textString = $textString;
         $this->validator = $validator;
-        $this->settings = $settings;
+        $this->cacheStatus = $cacheStatus;
     }
 
     protected function query()
@@ -64,7 +63,7 @@ class StringRepository
         $string = new TextString($attributes);
         $string->save();
 
-        $this->cacheShouldBeCleared();
+        $this->cacheStatus->translationWasModified($string->locale);
 
         return $string;
     }
@@ -82,7 +81,7 @@ class StringRepository
         $string->fill($attributes);
         $string->save();
 
-        $this->cacheShouldBeCleared();
+        $this->cacheStatus->translationWasModified($string->locale);
 
         return $string;
     }
@@ -95,12 +94,6 @@ class StringRepository
     {
         $string->delete();
 
-        $this->cacheShouldBeCleared();
-    }
-
-    public function cacheShouldBeCleared()
-    {
-        // This flags lets the frontend know it should suggest to the user to clear the cache
-        $this->settings->set('fof.linguist.should-clear-cache', '1');
+        $this->cacheStatus->translationWasModified($string->locale);
     }
 }
