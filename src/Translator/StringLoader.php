@@ -36,6 +36,8 @@ class StringLoader implements LoaderInterface
 
         $catalog->add($messages);
 
+        $catalog->addResource(new DatabaseResource($locale));
+
         return $catalog;
     }
 }

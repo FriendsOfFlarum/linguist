@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Api\Controllers;
 
 use Flarum\Foundation\ValidationException;
+use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\Repositories\StringRepository;
 use FoF\Linguist\TextString;
 use Illuminate\Support\Arr;
@@ -17,10 +18,12 @@ use Symfony\Component\Yaml\Yaml;
 class ImportController implements RequestHandlerInterface
 {
     protected $repository;
+    protected $cacheStatus;
 
-    public function __construct(StringRepository $repository)
+    public function __construct(StringRepository $repository, CacheStatusRepository $cacheStatus)
     {
         $this->repository = $repository;
+        $this->cacheStatus = $cacheStatus;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -90,7 +93,7 @@ class ImportController implements RequestHandlerInterface
         }
 
         if ($totalImported > 0) {
-            $this->repository->cacheShouldBeCleared();
+            $this->cacheStatus->translationWasModified($locale);
         }
 
         return new JsonResponse([

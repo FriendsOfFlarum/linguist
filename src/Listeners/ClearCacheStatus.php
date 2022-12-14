@@ -2,21 +2,19 @@
 
 namespace FoF\Linguist\Listeners;
 
-use Flarum\Foundation\Event\ClearingCache;
-use Flarum\Settings\SettingsRepositoryInterface;
+use FoF\Linguist\Repositories\CacheStatusRepository;
 
 class ClearCacheStatus
 {
-    protected $settings;
+    protected $cacheStatus;
 
-    public function __construct(SettingsRepositoryInterface $settings)
+    public function __construct(CacheStatusRepository $cacheStatus)
     {
-        $this->settings = $settings;
+        $this->cacheStatus = $cacheStatus;
     }
 
-    public function handle(ClearingCache $event)
+    public function handle()
     {
-        // When the cache has been cleared, either from Linguist tab or anywhere else, we remove our flag
-        $this->settings->delete('fof.linguist.should-clear-cache');
+        $this->cacheStatus->cacheWasCleared();
     }
 }

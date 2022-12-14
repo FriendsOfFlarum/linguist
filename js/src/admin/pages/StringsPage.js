@@ -40,21 +40,7 @@ export default class StringsPage {
 
         return [
             // Additional divs are used to reduce Mithril redraws as much as possible when the conditional components appear
-            m('div', app.data.settings['fof.linguist.should-clear-cache'] === '1' ? Alert.component({
-                dismissible: false,
-                controls: [Button.component({
-                    className: 'Button Button--link',
-                    onclick() {
-                        // Same logic as in core StatusWidget
-                        app.modal.show(LoadingModal);
-
-                        app.request({
-                            method: 'DELETE',
-                            url: app.forum.attribute('apiUrl') + '/cache',
-                        }).then(() => window.location.reload());
-                    },
-                }, app.translator.trans('fof-linguist.admin.clear-cache.button'))],
-            }, app.translator.trans('fof-linguist.admin.clear-cache.text')) : null),
+            m('div', this.cacheClearInstructions()),
             m('.FoF-Linguist-Filters', [
                 m('input.FormControl', {
                     value: this.filters.search,
@@ -364,5 +350,35 @@ export default class StringsPage {
         });
 
         m.redraw();
+    }
+
+    cacheClearInstructions() {
+        // If debug is enabled, we hide the message here because even if we stop setting the flag,
+        // an older flag might still be present from before debug mode was enabled
+        if (app.data.debugEnabled) {
+            return null;
+        }
+
+        // Check for flag that says cache should be cleared
+        // This value is set both server-side and client-side in the onchange code above for immediate effect
+        if (app.data.settings['fof.linguist.should-clear-cache'] !== '1') {
+            return null;
+        }
+
+        return Alert.component({
+            dismissible: false,
+            controls: [Button.component({
+                className: 'Button Button--link',
+                onclick() {
+                    // Same logic as in core StatusWidget
+                    app.modal.show(LoadingModal);
+
+                    app.request({
+                        method: 'DELETE',
+                        url: app.forum.attribute('apiUrl') + '/cache',
+                    }).then(() => window.location.reload());
+                },
+            }, app.translator.trans('fof-linguist.admin.clear-cache.button'))],
+        }, app.translator.trans('fof-linguist.admin.clear-cache.text'));
     }
 }
