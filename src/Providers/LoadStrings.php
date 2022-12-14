@@ -19,8 +19,16 @@ class LoadStrings extends AbstractServiceProvider
 
                 $translator->addLoader('fof_linguist', $this->container->make(StringLoader::class));
 
+                $localeKeys = array_keys($locales->getLocales());
+
+                // Even if English is not enabled, it's still used by Flarum as the fallback language
+                // So the loader must be added for custom English translations to apply when fallback is used
+                if (!in_array('en', $localeKeys)) {
+                    $localeKeys[] = 'en';
+                }
+
                 // Add the custom loader to every language available in Flarum
-                foreach ($locales->getLocales() as $locale => $name) {
+                foreach ($localeKeys as $locale) {
                     // The resource does not actually contain any data,
                     // it will be fetched from the database when the loader runs
                     $translator->addResource('fof_linguist', null, $locale);
