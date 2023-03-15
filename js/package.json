@@ -3,7 +3,7 @@
     "name": "@fof/linguist",
     "dependencies": {
         "flarum-webpack-config": "^2.0",
-        "webpack": "^5.0",
+        "webpack": "^5.76",
         "webpack-cli": "^4.0"
     },
     "scripts": {
