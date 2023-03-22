@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Api\Controllers;
 
 use Flarum\Foundation\ValidationException;
+use Flarum\Http\RequestUtil;
 use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\Repositories\StringRepository;
 use FoF\Linguist\TextString;
@@ -28,7 +29,7 @@ class ImportController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $request->getAttribute('actor')->assertAdmin();
+        RequestUtil::getActor($request)->assertAdmin();
 
         $locale = Arr::get($request->getParsedBody(), 'locale', 'en');
 

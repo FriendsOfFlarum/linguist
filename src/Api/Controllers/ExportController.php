@@ -2,6 +2,7 @@
 
 namespace FoF\Linguist\Api\Controllers;
 
+use Flarum\Http\RequestUtil;
 use Flarum\Locale\Translator;
 use FoF\Linguist\TextString;
 use Illuminate\Support\Arr;
@@ -23,7 +24,7 @@ class ExportController implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $request->getAttribute('actor')->assertAdmin();
+        RequestUtil::getActor($request)->assertAdmin();
 
         $locale = Arr::get($request->getQueryParams(), 'locale', 'en');
 

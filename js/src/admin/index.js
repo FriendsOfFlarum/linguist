@@ -12,5 +12,18 @@ app.initializers.add('fof-linguist', app => {
     app.store.models['fof-linguist-string-key'] = StringKey;
     app.store.models['fof-linguist-string'] = TextString;
 
-    app.extensionData.for('fof-linguist').registerPage(LinguistPage);
+    app.extensionData
+        .for('fof-linguist')
+        .registerPage(LinguistPage)
+        .registerPermission(
+            {
+                icon: 'fas fa-italic',
+                label: app.translator.trans(
+                    'fof-linguist.admin.permissions.view_string_keys'
+                ),
+                permission: 'viewStringKeys',
+                allowGuest: true,
+            },
+            'view'
+        );
 });
