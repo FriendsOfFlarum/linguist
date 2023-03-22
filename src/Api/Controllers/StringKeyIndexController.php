@@ -5,6 +5,7 @@ namespace FoF\Linguist\Api\Controllers;
 use FoF\Linguist\Api\Serializers\StringKeySerializer;
 use FoF\Linguist\Repositories\DefaultStringsRepository;
 use Flarum\Api\Controller\AbstractListController;
+use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -31,16 +32,13 @@ class StringKeyIndexController extends AbstractListController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
+        RequestUtil::getActor($request)->assertCan('viewStringKeys');
+
         // Extract filters from the request.
         $filters = $this->extractFilter($request);
 
         // Look for the 'prefix' key in the filters.
         $prefix = Arr::get($filters, 'prefix', null);
-
-        // If no prefix is provided, ensure the requestor is an admin.
-        if (!$prefix) {
-            $request->getAttribute('actor')->assertAdmin();
-        }
 
         // Retrieve all translations from the repository.
         $all = $this->repository->allTranslations();

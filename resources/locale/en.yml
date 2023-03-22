@@ -1,5 +1,7 @@
 fof-linguist:
     admin:
+        permissions:
+            view_string_keys: View translation string keys
         tabs:
             strings: Translations
             coverage: Coverage

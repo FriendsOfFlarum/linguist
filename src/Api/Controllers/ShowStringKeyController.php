@@ -23,7 +23,7 @@ class ShowStringKeyController extends AbstractShowController
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        RequestUtil::getActor($request)->assertAdmin();
+        RequestUtil::getActor($request)->assertCan('viewStringKeys');
 
         $key = Arr::get($request->getQueryParams(), 'key');
 
