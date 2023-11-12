@@ -10,7 +10,7 @@ class NoOpConfigCache implements ConfigCacheInterface
     /**
      * Gets the cache file path.
      *
-     * @return string The cache file path
+     * @return string|null The cache file path
      */
     public function getPath()
     {

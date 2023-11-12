@@ -36,7 +36,7 @@ class StringRepository
 
     /**
      * @param $id
-     * @return TextString|Model
+     * @return TextString
      */
     public function findOrFail($id)
     {

@@ -64,9 +64,6 @@ class ImportController implements RequestHandlerInterface
                 ]);
             }
 
-            /**
-             * @var TextString $string
-             */
             $string = TextString::query()
                 ->where('locale', $locale)
                 ->where('key', $key)
