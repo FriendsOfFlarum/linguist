@@ -11,6 +11,10 @@ class StringSerializer extends AbstractSerializer
         return 'fof-linguist-string';
     }
 
+    /**
+     * @param \FoF\Linguist\TextString $model
+     * @return array
+     */
     protected function getDefaultAttributes($model): array
     {
         return $model->toArray();

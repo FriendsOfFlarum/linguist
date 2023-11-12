@@ -80,6 +80,7 @@ class ExportController implements RequestHandlerInterface
                 $node = &$nestedTranslations;
 
                 foreach (explode('.', $key) as $path) {
+                    /** @phpstan-ignore-next-line */
                     if (!array_key_exists($path, $node)) {
                         $node[$path] = [];
                     }
