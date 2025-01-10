@@ -93,15 +93,18 @@ class DefaultStringsRepository
 
     protected function localeKeys(): array
     {
+        // Retrieve the list of locale keys
         $locales = array_keys($this->manager->getLocales());
 
         // Always include English, even if the language pack has been disabled or removed
         // This is necessary to show translations that aren't included in any of the currently enabled langue packs
         // The absence of the language pack doesn't cause any issue, all translations from core and its extensions are not in the language pack anyway
-        if (!in_array('en', $locales)) {
+        if (!in_array('en', $locales, true)) {
             $locales[] = 'en';
         }
 
-        return $locales;
+        // Ensure that en is always the first locale
+        // This is nessesary to show "ref" strings correctly when en is not the default language
+        return array_merge(['en'], array_diff($locales, ['en']));
     }
 }
