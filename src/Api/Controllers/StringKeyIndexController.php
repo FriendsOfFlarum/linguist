@@ -6,9 +6,7 @@ use FoF\Linguist\Api\Serializers\StringKeySerializer;
 use FoF\Linguist\Repositories\DefaultStringsRepository;
 use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 
@@ -37,21 +35,7 @@ class StringKeyIndexController extends AbstractListController
         // Extract filters from the request.
         $filters = $this->extractFilter($request);
 
-        // Look for the 'prefix' key in the filters.
-        $prefix = Arr::get($filters, 'prefix', null);
-
-        // Retrieve all translations from the repository.
-        $all = $this->repository->allTranslations();
-
-        // If a prefix is provided, filter the translations by that prefix.
-        if ($prefix) {
-            return $all->filter(function ($item) use ($prefix) {
-                // Return true if the item's key starts with the provided prefix.
-                return Str::startsWith($item['key'], $prefix);
-            });
-        } else {
-            // If no prefix is provided, return all translations.
-            return $all;
-        }
+        // Retrieve all translations from the default repository.
+        return $this->repository->allTranslations($this->repository->getPrefix($filters));
     }
 }

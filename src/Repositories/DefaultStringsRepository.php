@@ -8,6 +8,7 @@ use Flarum\Settings\SettingsRepositoryInterface;
 use FoF\Linguist\Translator\NoOpConfigCacheFactory;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class DefaultStringsRepository
 {
@@ -22,7 +23,7 @@ class DefaultStringsRepository
         $this->manager = $manager;
     }
 
-    public function allTranslations()
+    public function allTranslations(?string $filter = null)
     {
         $translator = $this->manager->getTranslator();
 
@@ -59,9 +60,18 @@ class DefaultStringsRepository
         // so no need to make Flarum use the cached version again to finish answering this request.
         // We would only miss Linguist-defined strings inside the eventual errors happening later in this very request.
 
-        return collect($translations)->sortBy(function ($value, $key) {
+        $all = collect($translations)->sortBy(function ($value, $key) {
             return $key;
         });
+
+        if (!empty($filter)) {
+            return $all->filter(function ($item) use ($filter) {
+                // Return true if the item's key starts with the provided prefix.
+                return Str::startsWith($item['key'], $filter);
+            });
+        }
+
+        return $all;
     }
 
     public function getTranslation($key)
@@ -106,5 +116,16 @@ class DefaultStringsRepository
         // Ensure that en is always the first locale
         // This is nessesary to show "ref" strings correctly when en is not the default language
         return array_merge(['en'], array_diff($locales, ['en']));
+    }
+
+    /**
+     * Look for the 'prefix' key in the filters.
+     *
+     * @param array $filters
+     * @return string|null
+     */
+    public function getPrefix(array $filters): ?string
+    {
+        return Arr::get($filters, 'prefix', null);
     }
 }
