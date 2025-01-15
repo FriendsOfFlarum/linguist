@@ -2,6 +2,7 @@
 
 namespace FoF\Linguist\Repositories;
 
+use Flarum\Database\Eloquent\Collection;
 use FoF\Linguist\TextString;
 use FoF\Linguist\Validators\StringValidator;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,15 @@ class StringRepository
     public function getByKey($key)
     {
         return $this->query()->where('key', $key)->get();
+    }
+
+    /**
+     * @param array $keys
+     * @return Collection<TextString>
+     */
+    public function getByKeys(array $keys): Collection
+    {
+        return $this->query()->whereIn('key', $keys)->get();
     }
 
     /**
