@@ -62,11 +62,7 @@ export default class StringsPage {
                             (this.filters.withOwnTranslations
                                 ? " FoF-Linguist-Filter--Selected"
                                 : ""),
-                        icon: `far fa-${
-                            this.filters.withOwnTranslations
-                                ? "check-square"
-                                : "square"
-                        }`,
+                        icon: `far fa-${this.filters.withOwnTranslations ? "check-square" : "square"}`,
                         onclick: () => {
                             this.filters.withOwnTranslations =
                                 !this.filters.withOwnTranslations;
@@ -92,12 +88,7 @@ export default class StringsPage {
                         Button.component(
                             {
                                 className: "Button",
-                                icon: `far fa-${
-                                    this.filters.forExtension ===
-                                    namespace.namespace
-                                        ? "dot-circle"
-                                        : "circle"
-                                }`,
+                                icon: `far fa-${this.filters.forExtension === namespace.namespace ? "dot-circle" : "circle"}`,
                                 onclick: () => {
                                     if (
                                         this.filters.forExtension ===
@@ -135,11 +126,7 @@ export default class StringsPage {
                             Button.component(
                                 {
                                     className: "Button",
-                                    icon: `far fa-${
-                                        this.filters.frontend === frontend
-                                            ? "dot-circle"
-                                            : "circle"
-                                    }`,
+                                    icon: `far fa-${this.filters.frontend === frontend ? "dot-circle" : "circle"}`,
                                     onclick: () => {
                                         if (
                                             this.filters.frontend === frontend
@@ -267,13 +254,7 @@ export default class StringsPage {
                             Button.component(
                                 {
                                     className: "Button",
-                                    icon: `far fa-${
-                                        this.filters.missingTranslationsInLocales.indexOf(
-                                            locale.key,
-                                        ) !== -1
-                                            ? "check-square"
-                                            : "square"
-                                    }`,
+                                    icon: `far fa-${this.filters.missingTranslationsInLocales.indexOf(locale.key) !== -1 ? "check-square" : "square"}`,
                                     onclick: () => {
                                         if (
                                             this.filters.missingTranslationsInLocales.indexOf(
