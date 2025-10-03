@@ -31,28 +31,6 @@ php flarum migrate
 php flarum cache:clear
 ```
 
-### Updating from Flagrow
-
-This extension replaces [Flagrow Linguist](https://packagist.org/packages/flagrow/linguist).
-
-To upgrade from the old extension to the new one:
-
-- Disable the Linguist extension in the admin panel.
-
-- Run:
-
-```sh
-composer require fof/linguist
-```
-
-Composer should let you know that `flagrow/linguist` has been automatically removed.
-
-- Enable the new extension in the admin panel.
-
-- Your existing translations will be migrated to FoF Linguist automatically.
-
-- Edit a translation or clear the cache to apply the existing translations to the forum.
-
 ## Configuration
 
 Once enabled, a new tab will show up in the admin to configure translations.
