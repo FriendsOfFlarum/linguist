@@ -29,7 +29,7 @@
         }
     ],
     "require": {
-        "flarum/core": "^1.2",
+        "flarum/core": "^2.0.0-beta",
         "symfony/yaml": "^5.0"
     },
     "replace": {
@@ -63,7 +63,7 @@
         }
     },
     "require-dev": {
-        "flarum/phpstan": "*"
+        "flarum/phpstan": "^2.0.0-beta"
     },
     "scripts": {
         "analyse:phpstan": "phpstan analyse",
