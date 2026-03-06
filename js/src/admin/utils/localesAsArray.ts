@@ -1,11 +1,16 @@
 import app from "flarum/admin/app";
 
-export default function () {
-    let locales = [];
+export interface LocaleEntry {
+    key: string;
+    name: string;
+}
+
+export default function localesAsArray(): LocaleEntry[] {
+    const locales: LocaleEntry[] = [];
 
     let englishFound = false;
 
-    for (let key in app.data.locales) {
+    for (const key in app.data.locales) {
         if (!app.data.locales.hasOwnProperty(key)) {
             continue;
         }

@@ -12,18 +12,11 @@ use Illuminate\Support\Str;
 
 class DefaultStringsRepository
 {
-    protected $settings;
-    protected $events;
-    protected $manager;
-
-    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, LocaleManager $manager)
+    public function __construct(protected SettingsRepositoryInterface $settings, protected Dispatcher $events, protected LocaleManager $manager)
     {
-        $this->settings = $settings;
-        $this->events = $events;
-        $this->manager = $manager;
     }
 
-    public function allTranslations(?string $filter = null)
+    public function allTranslations(?string $filter = null): \Illuminate\Support\Collection
     {
         $translator = $this->manager->getTranslator();
 
@@ -74,7 +67,10 @@ class DefaultStringsRepository
         return $all;
     }
 
-    public function getTranslation($key)
+    /**
+     * @return array<string, mixed>
+     */
+    public function getTranslation(string $key): array
     {
         // For detailed explanations of the different steps, see the `allTranslations`.
         $translator = $this->manager->getTranslator();

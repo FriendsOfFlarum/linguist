@@ -7,14 +7,9 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 
 class NoOpConfigCache implements ConfigCacheInterface
 {
-    /**
-     * Gets the cache file path.
-     *
-     * @return string|null The cache file path
-     */
-    public function getPath()
+    public function getPath(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -24,7 +19,7 @@ class NoOpConfigCache implements ConfigCacheInterface
      *
      * @return bool Whether the cache is still fresh
      */
-    public function isFresh()
+    public function isFresh(): bool
     {
         return false;
     }
@@ -38,7 +33,7 @@ class NoOpConfigCache implements ConfigCacheInterface
      *
      * @throws \RuntimeException When the cache file cannot be written
      */
-    public function write($content, array $metadata = null)
+    public function write(string $content, ?array $metadata = null): void
     {
         // No op
     }

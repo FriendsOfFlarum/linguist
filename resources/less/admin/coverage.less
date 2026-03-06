@@ -5,7 +5,7 @@
     }
 
     td {
-        border-bottom: 2px solid #dedede;
+        border-bottom: 2px solid var(--control-bg);
         vertical-align: middle;
 
         &:first-child {
@@ -15,7 +15,7 @@
 
     th {
         text-align: left;
-        border-bottom: 2px solid #666;
+        border-bottom: 2px solid var(--muted-color);
     }
 }
 
@@ -38,7 +38,7 @@
 }
 
 .FoF-Linguist-Coverage-Namespace-Icon {
-    background: #efefef;
+    background: var(--control-bg);
 }
 
 .FoF-Linguist-Progress {
@@ -46,10 +46,11 @@
     display: inline-block;
     width: 240px;
     height: 20px;
-    background: #efefef;
+    background: var(--control-bg);
     border-radius: 4px;
     overflow: hidden;
     text-align: center;
+    color: var(--alert-color);
 }
 
 .FoF-Linguist-Progress-Bar,
@@ -63,23 +64,22 @@
 
 .FoF-Linguist-Progress-Bar {
     height: 20px;
-    // Color copied from Flarum variables
-    // But copied over because we don't want themes to change it
-    // That's because depending on the % shown the background will be either this or grey so we need to be sure the text color stays readable
-    background: #fff2ae; // Same as @alert-bg
+    background: var(--alert-bg);
 }
 
 .FoF-Linguist-Progress--full {
-    color: @alert-success-color;
+    color: var(--alert-success-color);
 
     .FoF-Linguist-Progress-Bar {
-        background: @alert-success-bg;
+        background: var(--alert-success-bg);
     }
 }
 
 .FoF-Linguist-Progress--low {
+    color: var(--alert-error-color);
+
     .FoF-Linguist-Progress-Bar {
-        background: #d83e3e; // Same as @alert-error-bg
+        background: var(--alert-error-bg);
     }
 }
 

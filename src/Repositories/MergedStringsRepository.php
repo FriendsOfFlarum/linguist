@@ -7,32 +7,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MergedStringsRepository
 {
-/**
-     * @var DefaultStringsRepository
-     */
-    protected $defaultStrings;
-
-    /**
-     * @var StringRepository
-     */
-    protected $strings;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    public function __construct(
-        DefaultStringsRepository $defaultStrings,
-        StringRepository $strings,
-        TranslatorInterface $translator
-    ) {
-        $this->defaultStrings = $defaultStrings;
-        $this->strings = $strings;
-        $this->translator = $translator;
+public function __construct(protected DefaultStringsRepository $defaultStrings, protected StringRepository $strings, protected TranslatorInterface $translator)
+    {
     }
 
-    public function getTranslations(?string $filter)
+    public function getTranslations(?string $filter): \Illuminate\Support\Collection
     {
         // Retrieve all translations from the default repository and returns a Collection.
         // @example

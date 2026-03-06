@@ -5,7 +5,6 @@ namespace FoF\Linguist\Api\Controllers;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use FoF\Linguist\Repositories\CacheStatusRepository;
-use FoF\Linguist\Repositories\StringRepository;
 use FoF\Linguist\TextString;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -18,13 +17,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class ImportController implements RequestHandlerInterface
 {
-    protected $repository;
-    protected $cacheStatus;
-
-    public function __construct(StringRepository $repository, CacheStatusRepository $cacheStatus)
+    public function __construct(protected CacheStatusRepository $cacheStatus)
     {
-        $this->repository = $repository;
-        $this->cacheStatus = $cacheStatus;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

@@ -6,9 +6,6 @@ export default class TextString extends Model {
     value = Model.attribute<string>("value");
 
     apiEndpoint() {
-        return (
-            // @ts-ignore
-            "/fof/linguist/strings" + (this.exists ? "/" + this.data.id : "")
-        );
+        return "/fof-linguist-strings" + (this.exists ? "/" + this.id() : "");
     }
 }
