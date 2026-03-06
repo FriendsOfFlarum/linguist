@@ -1,1 +1,1 @@
-export default function _default(frontend: any): any;
+export default function frontendLabel(frontend: string): string;

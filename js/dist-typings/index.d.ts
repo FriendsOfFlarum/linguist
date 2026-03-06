@@ -1,4 +1,1 @@
-export * from "./components";
-export * from "./models";
-export * from "./pages";
-export * from "./utils";
+export { default as extend } from "./extend";

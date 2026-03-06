@@ -1,17 +1,20 @@
-export default class LinguistPage extends ExtensionPage<import("flarum/admin/components/ExtensionPage").ExtensionPageAttrs> {
-    constructor();
-    oninit(vnode: any): void;
-    tab: string | undefined;
-    ready: boolean | undefined;
-    namespaces: any[] | ({
-        namespace: any;
-        extension: import("flarum/admin/AdminApplication").Extension;
-    } | {
-        namespace: string;
-    })[] | undefined;
-    frontends: string[] | undefined;
-    initialBrowseFilters: any;
-    content(): any;
-    contentTab(): any;
-}
 import ExtensionPage from "flarum/admin/components/ExtensionPage";
+import type { Extension } from "flarum/admin/AdminApplication";
+import type Mithril from "mithril";
+type TabName = "strings" | "coverage" | "export" | "import";
+export interface NamespaceEntry {
+    namespace: string;
+    extension?: Extension;
+}
+export default class LinguistPage extends ExtensionPage {
+    tab: TabName;
+    ready: boolean;
+    namespaces: NamespaceEntry[];
+    frontends: string[];
+    initialBrowseFilters: Record<string, unknown>;
+    oninit(vnode: Mithril.Vnode<any, this>): void;
+    content(_vnode: Mithril.VnodeDOM<any, this>): JSX.Element;
+    infoItems(): import("flarum/common/utils/ItemList").default<Mithril.Children>;
+    contentTab(): Mithril.Children;
+}
+export {};

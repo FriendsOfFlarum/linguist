@@ -1,1 +1,1 @@
-export default function _default(operation: any, booleans: any): any;
+export default function booleanCheck(operation: string, booleans: boolean[]): boolean;

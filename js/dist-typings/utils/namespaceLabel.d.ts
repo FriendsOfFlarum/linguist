@@ -1,1 +1,1 @@
-export default function _default(namespace: any): any;
+export default function namespaceLabel(namespace: string): string;
