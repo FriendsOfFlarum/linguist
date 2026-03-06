@@ -12,7 +12,7 @@ app.initializers.add('fof-linguist', (app) => {
   app.store.models['fof-linguist-string-key'] = StringKey;
   app.store.models['fof-linguist-string'] = TextString;
 
-  app.extensionData
+  app.registry
     .for('fof-linguist')
     .registerPage(LinguistPage)
     .registerPermission(

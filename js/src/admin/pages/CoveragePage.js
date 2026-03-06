@@ -1,6 +1,6 @@
 import app from 'flarum/admin/app';
 import Button from 'flarum/common/components/Button';
-import icon from 'flarum/common/helpers/icon';
+import Icon from 'flarum/common/components/Icon';
 import localesAsArray from '../utils/localesAsArray';
 import namespaceLabel from '../utils/namespaceLabel';
 import frontendLabel from '../utils/frontendLabel';
@@ -142,7 +142,11 @@ export default class CoveragePage {
                         {
                           style: namespace.extension.icon,
                         },
-                        namespace.extension.icon ? icon(namespace.extension.icon.name) : ''
+                        namespace.extension.icon
+                          ? Icon.component({
+                              name: namespace.extension.icon.name,
+                            })
+                          : ''
                       ),
                       m('span.FoF-Linguist-Coverage-Extension-Title', namespace.extension.extra['flarum-extension'].title),
                     ]
