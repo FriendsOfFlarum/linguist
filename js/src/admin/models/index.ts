@@ -1,7 +1,7 @@
-import StringKey from "./StringKey";
-import TextString from "./TextString";
+import StringKey from './StringKey';
+import TextString from './TextString';
 
 export const models = {
-    StringKey,
-    TextString,
+  StringKey,
+  TextString,
 };

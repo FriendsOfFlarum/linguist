@@ -1,13 +1,13 @@
 export default function (operation, booleans) {
-    return booleans.reduce((a, b) => {
-        if (a === "start") {
-            return b;
-        }
+  return booleans.reduce((a, b) => {
+    if (a === 'start') {
+      return b;
+    }
 
-        if (operation === "or") {
-            return a || b;
-        }
+    if (operation === 'or') {
+      return a || b;
+    }
 
-        return a && b;
-    }, "start");
+    return a && b;
+  }, 'start');
 }
