@@ -7,23 +7,18 @@ use Flarum\Settings\SettingsRepositoryInterface;
 
 class CacheStatusRepository
 {
-    protected $settings;
-    protected $config;
-
     const SHOULD_CLEAR_SETTING_KEY = 'fof.linguist.should-clear-cache';
     const LAST_EDIT_SETTING_KEY = 'fof.linguist.last-edit-date.';
 
-    public function __construct(SettingsRepositoryInterface $settings, Config $config)
+    public function __construct(protected SettingsRepositoryInterface $settings, protected Config $config)
     {
-        $this->settings = $settings;
-        $this->config = $config;
     }
 
     /**
      * To be called every time a customized translation is modified
      * @param string|null $locale Locale that received updates or null for the special "all"
      */
-    public function translationWasModified(string $locale = null): void
+    public function translationWasModified(?string $locale = null): void
     {
         // No need to ask the user to clear cache if debug mode is on, the translations will be refreshed on next request already
         if (!$this->config->inDebugMode()) {

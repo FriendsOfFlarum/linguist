@@ -9,11 +9,8 @@ use Symfony\Component\Translation\MessageCatalogue;
 
 class StringLoader implements LoaderInterface
 {
-    protected $repository;
-
-    public function __construct(StringRepository $repository)
+    public function __construct(protected StringRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     /**

@@ -18,13 +18,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class ImportController implements RequestHandlerInterface
 {
-    protected $repository;
-    protected $cacheStatus;
-
-    public function __construct(StringRepository $repository, CacheStatusRepository $cacheStatus)
+    public function __construct(protected StringRepository $repository, protected CacheStatusRepository $cacheStatus)
     {
-        $this->repository = $repository;
-        $this->cacheStatus = $cacheStatus;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

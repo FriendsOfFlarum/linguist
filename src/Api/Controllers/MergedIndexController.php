@@ -14,20 +14,8 @@ class MergedIndexController extends AbstractListController
 {
     public $serializer = StringKeySerializer::class;
 
-    /**
-     * @var MergedStringsRepository
-     */
-    protected $mergedStrings;
-
-    /**
-     * @var DefaultStringsRepository
-     */
-    protected $defaultStrings;
-
-    public function __construct(MergedStringsRepository $mergedStrings, DefaultStringsRepository $defaultStrings)
+    public function __construct(protected MergedStringsRepository $mergedStrings, protected DefaultStringsRepository $defaultStrings)
     {
-        $this->mergedStrings = $mergedStrings;
-        $this->defaultStrings = $defaultStrings;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

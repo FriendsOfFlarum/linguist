@@ -6,11 +6,8 @@ use FoF\Linguist\Repositories\CacheStatusRepository;
 
 class ClearCacheStatus
 {
-    protected $cacheStatus;
-
-    public function __construct(CacheStatusRepository $cacheStatus)
+    public function __construct(protected CacheStatusRepository $cacheStatus)
     {
-        $this->cacheStatus = $cacheStatus;
     }
 
     public function handle()

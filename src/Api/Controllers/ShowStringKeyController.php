@@ -14,11 +14,8 @@ class ShowStringKeyController extends AbstractShowController
 {
     public $serializer = StringKeySerializer::class;
 
-    protected $repository;
-
-    public function __construct(DefaultStringsRepository $repository)
+    public function __construct(protected DefaultStringsRepository $repository)
     {
-        $this->repository = $repository;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

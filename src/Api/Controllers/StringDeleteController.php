@@ -10,14 +10,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class StringDeleteController extends AbstractDeleteController
 {
-    protected $strings;
-
-    public function __construct(StringRepository $strings)
+    public function __construct(protected StringRepository $strings)
     {
-        $this->strings = $strings;
     }
 
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         RequestUtil::getActor($request)->assertAdmin();
 

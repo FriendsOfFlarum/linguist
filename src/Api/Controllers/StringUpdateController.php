@@ -14,14 +14,8 @@ class StringUpdateController extends AbstractShowController
 {
     public $serializer = StringSerializer::class;
 
-    /**
-     * @var StringRepository
-     */
-    protected $strings;
-
-    public function __construct(StringRepository $strings)
+    public function __construct(protected StringRepository $strings)
     {
-        $this->strings = $strings;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

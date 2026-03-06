@@ -9,15 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class StringRepository
 {
-    protected $textString;
-    protected $validator;
-    protected $cacheStatus;
-
-    public function __construct(TextString $textString, StringValidator $validator, CacheStatusRepository $cacheStatus)
+    public function __construct(protected TextString $textString, protected StringValidator $validator, protected CacheStatusRepository $cacheStatus)
     {
-        $this->textString = $textString;
-        $this->validator = $validator;
-        $this->cacheStatus = $cacheStatus;
     }
 
     protected function query()

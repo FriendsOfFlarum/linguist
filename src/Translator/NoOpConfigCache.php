@@ -38,7 +38,7 @@ class NoOpConfigCache implements ConfigCacheInterface
      *
      * @throws \RuntimeException When the cache file cannot be written
      */
-    public function write($content, array $metadata = null)
+    public function write($content, ?array $metadata = null)
     {
         // No op
     }

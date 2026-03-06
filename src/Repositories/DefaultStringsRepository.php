@@ -12,15 +12,8 @@ use Illuminate\Support\Str;
 
 class DefaultStringsRepository
 {
-    protected $settings;
-    protected $events;
-    protected $manager;
-
-    public function __construct(SettingsRepositoryInterface $settings, Dispatcher $events, LocaleManager $manager)
+    public function __construct(protected SettingsRepositoryInterface $settings, protected Dispatcher $events, protected LocaleManager $manager)
     {
-        $this->settings = $settings;
-        $this->events = $events;
-        $this->manager = $manager;
     }
 
     public function allTranslations(?string $filter = null)

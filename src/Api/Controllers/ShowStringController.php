@@ -14,11 +14,8 @@ class ShowStringController extends AbstractListController
 {
     public $serializer = StringSerializer::class;
 
-    protected $strings;
-
-    public function __construct(StringRepository $strings)
+    public function __construct(protected StringRepository $strings)
     {
-        $this->strings = $strings;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

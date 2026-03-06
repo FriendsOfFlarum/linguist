@@ -7,11 +7,8 @@ use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 class DatabaseResource implements SelfCheckingResourceInterface
 {
-    protected $locale;
-
-    public function __construct(string $locale)
+    public function __construct(protected string $locale)
     {
-        $this->locale = $locale;
     }
 
     public function __toString(): string
