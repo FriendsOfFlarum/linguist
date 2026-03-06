@@ -16,7 +16,7 @@ class StringLoader implements LoaderInterface
     /**
      * @inheritdoc
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load(mixed $resource, string $locale, string $domain = 'messages'): MessageCatalogue
     {
         $catalog = new MessageCatalogue($locale);
 

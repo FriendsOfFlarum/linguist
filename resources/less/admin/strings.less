@@ -1,6 +1,6 @@
 .FoF-Linguist-Filter--Selected {
     // Use our own class to have both an icon and use the color of the primary button
-    .Button--color(@body-bg, @primary-color);
+    .Button--color-auto('button-primary');
 }
 
 .FoF-Linguist-Filters .Dropdown-menu {
@@ -84,7 +84,7 @@
     transform-origin: 0 0;
     transform: translate(0) scale(1);
     pointer-events: none; // Don't block access to the input
-    color: #aaa;
+    color: var(--muted-color);
 
     // Elipsis
     white-space: nowrap;
@@ -94,7 +94,7 @@
 
 .FoF-Linguist-Placeholder-Hint {
     display: none; // Will be shown under special cases
-    color: #aaa;
+    color: var(--muted-color);
 }
 
 .FoF-Linguist-Input:focus + .FoF-Linguist-Placeholder,
@@ -111,7 +111,7 @@
 }
 
 .FoF-Linguist-Field--with-original-string .FoF-Linguist-Placeholder {
-    color: #333;
+    color: var(--text-color);
 }
 
 .FoF-Linguist-Results {

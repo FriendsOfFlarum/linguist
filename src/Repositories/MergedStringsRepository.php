@@ -11,7 +11,7 @@ public function __construct(protected DefaultStringsRepository $defaultStrings, 
     {
     }
 
-    public function getTranslations(?string $filter)
+    public function getTranslations(?string $filter): \Illuminate\Support\Collection
     {
         // Retrieve all translations from the default repository and returns a Collection.
         // @example

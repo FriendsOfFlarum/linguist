@@ -16,7 +16,7 @@ class DefaultStringsRepository
     {
     }
 
-    public function allTranslations(?string $filter = null)
+    public function allTranslations(?string $filter = null): \Illuminate\Support\Collection
     {
         $translator = $this->manager->getTranslator();
 
@@ -67,7 +67,10 @@ class DefaultStringsRepository
         return $all;
     }
 
-    public function getTranslation($key)
+    /**
+     * @return array<string, mixed>
+     */
+    public function getTranslation(string $key): array
     {
         // For detailed explanations of the different steps, see the `allTranslations`.
         $translator = $this->manager->getTranslator();

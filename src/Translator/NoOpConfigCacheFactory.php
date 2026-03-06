@@ -15,7 +15,7 @@ class NoOpConfigCacheFactory implements ConfigCacheFactoryInterface
      *
      * @return ConfigCacheInterface The cache instance
      */
-    public function cache($file, $callable)
+    public function cache(string $file, callable $callable): ConfigCacheInterface
     {
         $cache = new NoOpConfigCache();
 

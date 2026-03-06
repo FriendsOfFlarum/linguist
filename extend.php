@@ -5,6 +5,7 @@ namespace FoF\Linguist;
 use Flarum\Extend;
 use Flarum\Foundation\Event\ClearingCache;
 use FoF\Linguist\Api\Controllers;
+use FoF\Linguist\Api\Resource;
 
 return [
     (new Extend\Frontend('admin'))
@@ -16,15 +17,11 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
 
     new Extend\Locales(__DIR__ . '/resources/locale'),
+
+    new Extend\ApiResource(Resource\TextStringResource::class),
+    new Extend\ApiResource(Resource\StringKeyResource::class),
+
     (new Extend\Routes('api'))
-        ->get('/fof/linguist/string-keys', 'fof.linguist.api.string-keys.index', Controllers\StringKeyIndexController::class)
-        ->get('/fof/linguist/string-keys/{key}', 'fof.linguist.api.string-keys.show', Controllers\ShowStringKeyController::class)
-        ->get('/fof/linguist/strings', 'fof.linguist.api.strings.index', Controllers\StringIndexController::class)
-        ->get('/fof/linguist/strings/{key}', 'fof.linguist.api.strings.show', Controllers\ShowStringController::class)
-        ->get('/fof/linguist/merged', 'fof/linguist.api.merged.index', Controllers\MergedIndexController::class)
-        ->post('/fof/linguist/strings', 'fof.linguist.api.strings.store', Controllers\StringStoreController::class)
-        ->patch('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.update', Controllers\StringUpdateController::class)
-        ->delete('/fof/linguist/strings/{id:[0-9]+}', 'fof.linguist.api.strings.delete', Controllers\StringDeleteController::class)
         ->get('/fof/linguist/export', 'fof.linguist.api.export', Controllers\ExportController::class)
         ->post('/fof/linguist/import', 'fof.linguist.api.import', Controllers\ImportController::class),
 

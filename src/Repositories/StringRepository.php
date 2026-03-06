@@ -4,99 +4,57 @@ namespace FoF\Linguist\Repositories;
 
 use Flarum\Database\Eloquent\Collection;
 use FoF\Linguist\TextString;
-use FoF\Linguist\Validators\StringValidator;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class StringRepository
 {
-    public function __construct(protected TextString $textString, protected StringValidator $validator, protected CacheStatusRepository $cacheStatus)
+    public function __construct(protected TextString $textString)
     {
     }
 
-    protected function query()
+    /**
+     * @return Builder<TextString>
+     */
+    protected function query(): Builder
     {
         return $this->textString->newQuery()->orderBy('key')->orderBy('locale');
     }
 
-    public function stringsForLocale($locale)
+    /**
+     * @return Collection<int, TextString>
+     */
+    public function stringsForLocale(?string $locale): Collection
     {
         return $this->query()->where('locale', $locale)->orWhere('locale', null)->get();
     }
 
-    public function all()
+    /**
+     * @return Collection<int, TextString>
+     */
+    public function all(): Collection
     {
         return $this->query()->get();
     }
 
-    /**
-     * @param $id
-     * @return TextString
-     */
-    public function findOrFail($id)
+    public function findOrFail(int|string $id): TextString
     {
         return $this->query()->findOrFail($id);
     }
 
     /**
-     * @param $key
+     * @return Collection<int, TextString>
      */
-    public function getByKey($key)
+    public function getByKey(string $key): Collection
     {
         return $this->query()->where('key', $key)->get();
     }
 
     /**
-     * @param array $keys
-     * @return Collection<TextString>
+     * @param array<string> $keys
+     * @return Collection<int, TextString>
      */
     public function getByKeys(array $keys): Collection
     {
         return $this->query()->whereIn('key', $keys)->get();
-    }
-
-    /**
-     * @param array $attributes
-     * @return TextString
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(array $attributes)
-    {
-        $this->validator->assertValid($attributes);
-
-        $string = new TextString($attributes);
-        $string->save();
-
-        $this->cacheStatus->translationWasModified($string->locale);
-
-        return $string;
-    }
-
-    /**
-     * @param TextString $string
-     * @param array $attributes
-     * @return TextString
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function update(TextString $string, array $attributes)
-    {
-        $this->validator->assertValid($attributes);
-
-        $string->fill($attributes);
-        $string->save();
-
-        $this->cacheStatus->translationWasModified($string->locale);
-
-        return $string;
-    }
-
-    /**
-     * @param TextString $string
-     * @throws \Exception
-     */
-    public function delete(TextString $string)
-    {
-        $string->delete();
-
-        $this->cacheStatus->translationWasModified($string->locale);
     }
 }

@@ -10,7 +10,7 @@ class ClearCacheStatus
     {
     }
 
-    public function handle()
+    public function handle(): void
     {
         $this->cacheStatus->cacheWasCleared();
     }

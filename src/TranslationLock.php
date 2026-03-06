@@ -4,7 +4,7 @@ namespace FoF\Linguist;
 
 class TranslationLock
 {
-    protected static $apply = true;
+    protected static bool $apply = true;
 
     public static function stopLoadingTranslations(): void
     {
