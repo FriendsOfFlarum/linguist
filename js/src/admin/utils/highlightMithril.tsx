@@ -1,10 +1,13 @@
-/* global m */
+import type Mithril from "mithril";
 
 const HIGHLIGHT_DELIMITER = "<fof-highlight>";
 
 // Takes a string and highlight a keyword with a span with mithril template
 // The output will be an array if a keyword is given
-export default function (string, highlight) {
+export default function highlightMithril(
+    string: string,
+    highlight: string | undefined,
+): Mithril.Children {
     if (!highlight) {
         return string;
     }
@@ -22,7 +25,7 @@ export default function (string, highlight) {
         .split(HIGHLIGHT_DELIMITER)
         .map((text) => {
             if (text.toLowerCase() === lowercaseHighliht) {
-                return m("span.FoF-Linguist-Highlight", text);
+                return <span className="FoF-Linguist-Highlight">{text}</span>;
             }
 
             return text;
