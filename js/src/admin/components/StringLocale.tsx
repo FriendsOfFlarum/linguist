@@ -233,7 +233,8 @@ export default class StringLocale extends Component<IStringLocaleAttrs> {
 
         this.string
             .save(this.string.data.attributes as Record<string, unknown>)
-            .then(() => {
+            .then((string) => {
+                this.string = string;
                 this.processing = false;
                 this.dirty = false;
                 onchange();
