@@ -200,7 +200,8 @@ export default class StringLocale {
 
         this.string
             .save(this.string.data.attributes)
-            .then(() => {
+            .then((string) => {
+                this.string = string;
                 this.processing = false;
                 this.dirty = false;
 
