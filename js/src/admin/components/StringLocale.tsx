@@ -233,7 +233,10 @@ export default class StringLocale extends Component<IStringLocaleAttrs> {
 
         this.string
             .save(this.string.data.attributes as Record<string, unknown>)
-            .then(() => {
+            .then((string) => {
+                // Saving a new record pushes a separate, persisted instance into the store
+                // and leaves this one without an id, so a second save would POST again
+                this.string = string;
                 this.processing = false;
                 this.dirty = false;
                 onchange();
