@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Repositories;
 
 use Flarum\Foundation\Config;
+use Flarum\Locale\LocaleManager;
 use Flarum\Settings\SettingsRepositoryInterface;
 
 class CacheStatusRepository
@@ -25,6 +26,9 @@ class CacheStatusRepository
             // This flags lets the frontend know it should suggest to the user to clear the cache
             $this->settings->set(self::SHOULD_CLEAR_SETTING_KEY, '1');
         }
+
+        // Flarum rebuilds compiled translations when this stamp changes, on every instance that shares the database
+        $this->settings->set(LocaleManager::REVISION_STAMP_KEY, (string) microtime(true));
 
         // Save the last edit date for use in the translator's isFresh logic
         // Use one key per locale to reduce the performance impact in debug mode by only refreshing the locales that were modified

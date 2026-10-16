@@ -2,6 +2,7 @@
 
 namespace FoF\Linguist\Tests\integration\api;
 
+use Flarum\Locale\LocaleManager;
 use Flarum\Testing\integration\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
@@ -50,5 +51,18 @@ class CreateTextStringTest extends TestCase
         $response = $this->create("{count, plural, one {Today's discussion} other {# discussions}}");
 
         $this->assertSame(201, $response->getStatusCode());
+    }
+
+    #[Test]
+    public function saving_a_translation_marks_compiled_translations_as_stale(): void
+    {
+        // Flarum rebuilds a compiled catalogue when the locale revision no longer matches the one it was built with
+        $locales = $this->app()->getContainer()->make(LocaleManager::class);
+        $revision = $locales->revision();
+
+        $response = $this->create('Every discussion');
+
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertNotSame($revision, $locales->revision());
     }
 }
