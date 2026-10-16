@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Translator;
 
 use FoF\Linguist\Repositories\StringRepository;
+use FoF\Linguist\TextString;
 use FoF\Linguist\TranslationLock;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -28,7 +29,11 @@ class StringLoader implements LoaderInterface
         $messages = [];
         $plainMessages = [];
 
-        foreach ($this->repository->stringsForLocale($locale) as $string) {
+        // "All locales" rows first, so a locale's own override replaces them whichever way the database sorts null
+        $strings = $this->repository->stringsForLocale($locale)
+            ->sortBy(fn (TextString $string) => $string->locale !== null);
+
+        foreach ($strings as $string) {
             if (IcuSyntax::isValid($string->value, $locale)) {
                 $messages[$string->key] = $string->value;
                 unset($plainMessages[$string->key]);

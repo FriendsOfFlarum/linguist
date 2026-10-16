@@ -7,6 +7,7 @@ use Flarum\Api\Endpoint;
 use Flarum\Api\Resource\AbstractDatabaseResource;
 use Closure;
 use Flarum\Api\Schema;
+use Flarum\Foundation\ValidationException;
 use Flarum\Locale\TranslatorInterface;
 use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\TextString;
@@ -106,6 +107,37 @@ class TextStringResource extends AbstractDatabaseResource
     public function sorts(): array
     {
         return [];
+    }
+
+    public function creating(object $model, BaseContext $context): ?object
+    {
+        /** @var TextString $model */
+        // The unique index does not stop two "All locales" rows, whose locale is null,
+        // so saving a key and locale that already exist updates that translation instead
+        $existing = TextString::query()
+            ->where('key', $model->key)
+            ->where('locale', $model->locale)
+            ->first();
+
+        if ($existing) {
+            $existing->value = $model->value;
+
+            return $existing;
+        }
+
+        return $model;
+    }
+
+    public function updating(object $model, BaseContext $context): ?object
+    {
+        // The admin page sends the key and locale with every save, so only an actual change is rejected
+        if ($model instanceof TextString && $model->isDirty(['key', 'locale'])) {
+            throw new ValidationException([
+                ($model->isDirty('key') ? 'key' : 'locale') => $this->translator->trans('fof-linguist.api.cannot_change_key_or_locale'),
+            ]);
+        }
+
+        return $model;
     }
 
     public function delete(object $model, BaseContext $context): void
