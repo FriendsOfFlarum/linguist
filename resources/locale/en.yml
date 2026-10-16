@@ -112,3 +112,4 @@ fof-linguist:
             api: API
     api:
         invalid_icu_syntax: The translation is not valid ICU message syntax, for example because a brace is not closed.
+        cannot_change_key_or_locale: The key and locale of a saved translation cannot be changed.
