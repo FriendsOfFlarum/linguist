@@ -4,6 +4,7 @@ namespace FoF\Linguist\Tests\integration\api;
 
 use Flarum\Locale\LocaleManager;
 use Flarum\Testing\integration\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 
 class CreateTextStringTest extends TestCase
@@ -15,7 +16,7 @@ class CreateTextStringTest extends TestCase
         $this->extension('fof-linguist');
     }
 
-    protected function create(string $value): \Psr\Http\Message\ResponseInterface
+    protected function create(string $value, ?string $locale = 'en'): \Psr\Http\Message\ResponseInterface
     {
         return $this->send(
             $this->request('POST', '/api/fof-linguist-strings', [
@@ -25,12 +26,25 @@ class CreateTextStringTest extends TestCase
                         'type' => 'fof-linguist-strings',
                         'attributes' => [
                             'key' => 'core.forum.index.all_discussions_link',
-                            'locale' => 'en',
+                            'locale' => $locale,
                             'value' => $value,
                         ],
                     ],
                 ],
             ])
+        );
+    }
+
+    /**
+     * @return array<int, array{locale: string|null, value: string}>
+     */
+    protected function savedStrings(): array
+    {
+        $response = $this->send($this->request('GET', '/api/fof-linguist-strings', ['authenticatedAs' => 1]));
+
+        return array_map(
+            fn (array $string) => ['locale' => $string['attributes']['locale'], 'value' => $string['attributes']['value']],
+            json_decode((string) $response->getBody(), true)['data']
         );
     }
 
@@ -64,5 +78,25 @@ class CreateTextStringTest extends TestCase
 
         $this->assertSame(201, $response->getStatusCode());
         $this->assertNotSame($revision, $locales->revision());
+    }
+
+    public static function locales(): array
+    {
+        return [
+            'all locales' => [null],
+            'one locale' => ['en'],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('locales')]
+    public function saving_the_same_key_and_locale_again_updates_the_existing_translation(?string $locale): void
+    {
+        $this->create('First', $locale);
+
+        $response = $this->create('Second', $locale);
+
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame([['locale' => $locale, 'value' => 'Second']], $this->savedStrings());
     }
 }

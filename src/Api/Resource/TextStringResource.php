@@ -108,6 +108,25 @@ class TextStringResource extends AbstractDatabaseResource
         return [];
     }
 
+    public function creating(object $model, BaseContext $context): ?object
+    {
+        /** @var TextString $model */
+        // The unique index does not stop two "All locales" rows, whose locale is null,
+        // so saving a key and locale that already exist updates that translation instead
+        $existing = TextString::query()
+            ->where('key', $model->key)
+            ->where('locale', $model->locale)
+            ->first();
+
+        if ($existing) {
+            $existing->value = $model->value;
+
+            return $existing;
+        }
+
+        return $model;
+    }
+
     public function delete(object $model, BaseContext $context): void
     {
         /** @var TextString $model */
