@@ -29,7 +29,7 @@ class StringLoader implements LoaderInterface
         $plainMessages = [];
 
         foreach ($this->repository->stringsForLocale($locale) as $string) {
-            if ($this->isValidIcu($locale, $string->value)) {
+            if (IcuSyntax::isValid($string->value, $locale)) {
                 $messages[$string->key] = $string->value;
                 unset($plainMessages[$string->key]);
             } else {
@@ -46,14 +46,5 @@ class StringLoader implements LoaderInterface
         $catalog->addResource(new DatabaseResource($locale));
 
         return $catalog;
-    }
-
-    protected function isValidIcu(string $locale, string $message): bool
-    {
-        try {
-            return \MessageFormatter::create($locale, $message) !== null;
-        } catch (\IntlException) {
-            return false;
-        }
     }
 }

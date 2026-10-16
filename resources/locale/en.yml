@@ -110,3 +110,5 @@ fof-linguist:
             lib: Lib (used on both Forum and Admin)
             ref: Ref (re-used in other keys)
             api: API
+    api:
+        invalid_icu_syntax: The translation is not valid ICU message syntax, for example because a brace is not closed.
