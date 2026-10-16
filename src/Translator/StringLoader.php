@@ -26,14 +26,22 @@ class StringLoader implements LoaderInterface
         }
 
         $messages = [];
+        $plainMessages = [];
 
         foreach ($this->repository->stringsForLocale($locale) as $string) {
-            $messages[$string->key] = $string->value;
+            if (IcuSyntax::isValid($string->value, $locale)) {
+                $messages[$string->key] = $string->value;
+                unset($plainMessages[$string->key]);
+            } else {
+                $plainMessages[$string->key] = $string->value;
+                unset($messages[$string->key]);
+            }
         }
 
-        $catalog->add($messages);
+        $catalog->add($messages, $domain);
 
-        $catalog->addResource(new DatabaseResource($locale));
+        // The ICU formatter throws on invalid syntax, so these stay in the plain domain where they are output as written
+        $catalog->add($plainMessages);
 
         return $catalog;
     }

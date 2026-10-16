@@ -5,9 +5,12 @@ namespace FoF\Linguist\Api\Resource;
 use Flarum\Api\Context;
 use Flarum\Api\Endpoint;
 use Flarum\Api\Resource\AbstractDatabaseResource;
+use Closure;
 use Flarum\Api\Schema;
+use Flarum\Locale\TranslatorInterface;
 use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\TextString;
+use FoF\Linguist\Translator\IcuSyntax;
 use Illuminate\Database\Eloquent\Builder;
 use Tobyz\JsonApiServer\Context as BaseContext;
 
@@ -18,6 +21,7 @@ class TextStringResource extends AbstractDatabaseResource
 {
     public function __construct(
         protected CacheStatusRepository $cacheStatus,
+        protected TranslatorInterface $translator,
     ) {
     }
 
@@ -52,7 +56,7 @@ class TextStringResource extends AbstractDatabaseResource
                     $context->getActor()->assertAdmin();
                 })
                 ->after(function (Context $context, TextString $model) {
-                    $this->cacheStatus->translationWasModified($model->locale);
+                    $this->cacheStatus->translationWasModified();
 
                     return $model;
                 }),
@@ -63,7 +67,7 @@ class TextStringResource extends AbstractDatabaseResource
                     $context->getActor()->assertAdmin();
                 })
                 ->after(function (Context $context, TextString $model) {
-                    $this->cacheStatus->translationWasModified($model->locale);
+                    $this->cacheStatus->translationWasModified();
 
                     return $model;
                 }),
@@ -89,7 +93,13 @@ class TextStringResource extends AbstractDatabaseResource
 
             Schema\Str::make('value')
                 ->requiredOnCreate()
-                ->writable(),
+                ->writable()
+                // A callable passed to rule() is called with the context to build the rule
+                ->rule(fn () => function (string $attribute, mixed $value, Closure $fail) {
+                    if (is_string($value) && !IcuSyntax::isValid($value)) {
+                        $fail($this->translator->trans('fof-linguist.api.invalid_icu_syntax'));
+                    }
+                }),
         ];
     }
 
@@ -103,6 +113,6 @@ class TextStringResource extends AbstractDatabaseResource
         /** @var TextString $model */
         $model->delete();
 
-        $this->cacheStatus->translationWasModified($model->locale);
+        $this->cacheStatus->translationWasModified();
     }
 }

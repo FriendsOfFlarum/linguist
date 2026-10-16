@@ -85,7 +85,7 @@ class ImportController implements RequestHandlerInterface
         }
 
         if ($totalImported > 0) {
-            $this->cacheStatus->translationWasModified($locale);
+            $this->cacheStatus->translationWasModified();
         }
 
         return new JsonResponse([
