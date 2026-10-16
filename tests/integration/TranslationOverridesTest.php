@@ -62,4 +62,16 @@ class TranslationOverridesTest extends TestCase
             $this->translate('core.lib.meta_titles.without_page_title', ['forumName' => 'Test Forum', 'pageNumber' => 2])
         );
     }
+
+    #[Test]
+    public function an_override_with_invalid_icu_syntax_is_served_as_written(): void
+    {
+        $this->prepareDatabase([
+            TextString::class => [
+                ['id' => 1, 'key' => 'core.forum.index.all_discussions_link', 'locale' => 'en', 'value' => 'All {discussions'],
+            ],
+        ]);
+
+        $this->assertSame('All {discussions', $this->translate('core.forum.index.all_discussions_link'));
+    }
 }
