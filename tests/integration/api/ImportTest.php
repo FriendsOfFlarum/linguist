@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Tests\integration\api;
 
 use Flarum\Testing\integration\TestCase;
+use FoF\Linguist\TextString;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
@@ -111,5 +112,46 @@ class ImportTest extends TestCase
 
         $this->assertSame(422, $response->getStatusCode());
         $this->assertSame([], $this->savedStrings());
+    }
+
+    #[Test]
+    public function a_large_import_does_not_query_once_per_string(): void
+    {
+        // The test case fails the request when the same query repeats per string
+        $yaml = '';
+
+        foreach (range(1, 10) as $number) {
+            $yaml .= "vendor-extension.forum.string_$number: String $number\n";
+        }
+
+        $response = $this->import($yaml);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(10, json_decode((string) $response->getBody(), true)['imported']);
+    }
+
+    #[Test]
+    public function existing_translations_are_updated_unless_identical(): void
+    {
+        $this->prepareDatabase([
+            TextString::class => [
+                ['id' => 1, 'key' => 'core.forum.index.all_discussions_link', 'locale' => 'en', 'value' => 'Everything'],
+                ['id' => 2, 'key' => 'core.forum.index.start_discussion_button', 'locale' => 'en', 'value' => 'Begin'],
+            ],
+        ]);
+
+        $response = $this->import(<<<'YAML'
+            core.forum.index.all_discussions_link: Everything
+            core.forum.index.start_discussion_button: Start talking
+            YAML);
+
+        $result = json_decode((string) $response->getBody(), true);
+        $this->assertSame(1, $result['imported']);
+        $this->assertSame(1, $result['identical']);
+
+        $this->assertSame([
+            'core.forum.index.all_discussions_link' => 'Everything',
+            'core.forum.index.start_discussion_button' => 'Start talking',
+        ], $this->savedStrings());
     }
 }

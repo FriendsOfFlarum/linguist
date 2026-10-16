@@ -7,7 +7,9 @@ use Flarum\Http\RequestUtil;
 use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\TextString;
 use FoF\Linguist\Translator\IcuSyntax;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -21,7 +23,7 @@ class ImportController implements RequestHandlerInterface
     // Length of the key column
     const MAX_KEY_LENGTH = 180;
 
-    public function __construct(protected CacheStatusRepository $cacheStatus)
+    public function __construct(protected CacheStatusRepository $cacheStatus, protected ConnectionInterface $db)
     {
     }
 
@@ -51,7 +53,6 @@ class ImportController implements RequestHandlerInterface
 
         $translations = Arr::dot($yaml);
 
-        $totalImported = 0;
         $totalIgnored = 0;
         $totalIdentical = 0;
         $totalEmpty = 0;
@@ -83,6 +84,13 @@ class ImportController implements RequestHandlerInterface
             }
         }
 
+        // One query for the strings this locale already has, rather than one per imported key
+        $existing = TextString::query()->where('locale', $locale)->get()->keyBy('key');
+        $ignoreExisting = (bool) Arr::get($request->getParsedBody(), 'ignoreExisting');
+
+        $newRows = [];
+        $changedStrings = [];
+
         foreach ($translations as $key => $value) {
             // A key without a value means it has not been translated
             if ($value === null || $value === '') {
@@ -93,31 +101,38 @@ class ImportController implements RequestHandlerInterface
             // Yaml reads values such as 10 as numbers
             $value = (string) $value;
 
-            $string = TextString::query()
-                ->where('locale', $locale)
-                ->where('key', $key)
-                ->first();
+            /** @var TextString|null $string */
+            $string = $existing->get($key);
 
-            if ($string) {
-                if (Arr::get($request->getParsedBody(), 'ignoreExisting')) {
-
-                    $totalIgnored++;
-                    continue;
-                } else if ($string->value === $value) {
-                    $totalIdentical++;
-                    continue;
-                }
+            if (!$string) {
+                $newRows[] = ['key' => $key, 'locale' => $locale, 'value' => $value];
+            } else if ($ignoreExisting) {
+                $totalIgnored++;
+            } else if ($string->value === $value) {
+                $totalIdentical++;
             } else {
-                $string = new TextString();
-                $string->key = $key;
-                $string->locale = $locale;
+                $string->value = $value;
+                $changedStrings[] = $string;
+            }
+        }
+
+        $totalImported = count($newRows) + count($changedStrings);
+
+        $this->db->transaction(function () use ($newRows, $changedStrings) {
+            $now = Carbon::now();
+
+            // Small enough batches to stay under the bound parameter limits of SQLite and PostgreSQL
+            foreach (array_chunk($newRows, 100) as $rows) {
+                TextString::query()->insert(array_map(
+                    fn (array $row) => $row + ['created_at' => $now, 'updated_at' => $now],
+                    $rows
+                ));
             }
 
-            $string->value = $value;
-            $string->save();
-
-            $totalImported++;
-        }
+            foreach ($changedStrings as $string) {
+                $string->save();
+            }
+        });
 
         if ($totalImported > 0) {
             $this->cacheStatus->translationWasModified();
