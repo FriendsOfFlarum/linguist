@@ -68,6 +68,12 @@ class ImportController implements RequestHandlerInterface
                     'input' => 'Translation key longer than ' . self::MAX_KEY_LENGTH . ' characters ' . $key,
                 ]);
             }
+
+            if ($value !== null && !is_string($value) && !is_int($value) && !is_float($value)) {
+                throw new ValidationException([
+                    'input' => 'Translation value must be text for key ' . $key,
+                ]);
+            }
         }
 
         foreach ($translations as $key => $value) {
@@ -76,6 +82,9 @@ class ImportController implements RequestHandlerInterface
                 $totalEmpty++;
                 continue;
             }
+
+            // Yaml reads values such as 10 as numbers
+            $value = (string) $value;
 
             $string = TextString::query()
                 ->where('locale', $locale)

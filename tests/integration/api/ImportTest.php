@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Tests\integration\api;
 
 use Flarum\Testing\integration\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
 
@@ -73,6 +74,27 @@ class ImportTest extends TestCase
         $response = $this->import(<<<YAML
             core.forum.index.all_discussions_link: Everything
             $longKey: Too long
+            YAML);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $this->assertSame([], $this->savedStrings());
+    }
+
+    public static function valuesThatAreNotText(): array
+    {
+        return [
+            'empty list' => ['[]'],
+            'boolean' => ['true'],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('valuesThatAreNotText')]
+    public function a_value_that_is_not_text_rejects_the_whole_import(string $value): void
+    {
+        $response = $this->import(<<<YAML
+            core.forum.index.all_discussions_link: Everything
+            core.forum.index.start_discussion_button: $value
             YAML);
 
         $this->assertSame(422, $response->getStatusCode());
