@@ -74,4 +74,17 @@ class TranslationOverridesTest extends TestCase
 
         $this->assertSame('All {discussions', $this->translate('core.forum.index.all_discussions_link'));
     }
+
+    #[Test]
+    public function a_locale_override_wins_over_an_all_locales_override(): void
+    {
+        $this->prepareDatabase([
+            TextString::class => [
+                ['id' => 1, 'key' => 'core.forum.index.all_discussions_link', 'locale' => 'en', 'value' => 'English only'],
+                ['id' => 2, 'key' => 'core.forum.index.all_discussions_link', 'locale' => null, 'value' => 'Every language'],
+            ],
+        ]);
+
+        $this->assertSame('English only', $this->translate('core.forum.index.all_discussions_link'));
+    }
 }
