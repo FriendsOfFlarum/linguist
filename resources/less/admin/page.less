@@ -59,6 +59,8 @@
         text-decoration: none;
         font-size: 1.3em;
         color: var(--text-color);
+        // The tabs item has no width of its own on desktop, so labels would break at every space or CJK character
+        white-space: nowrap;
 
         &.active, &:hover {
             background: var(--body-bg);
