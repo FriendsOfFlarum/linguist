@@ -31,7 +31,7 @@ class StringLoader implements LoaderInterface
             $messages[$string->key] = $string->value;
         }
 
-        $catalog->add($messages);
+        $catalog->add($messages, $domain);
 
         $catalog->addResource(new DatabaseResource($locale));
 

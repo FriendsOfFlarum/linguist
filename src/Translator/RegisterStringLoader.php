@@ -3,6 +3,7 @@
 namespace FoF\Linguist\Translator;
 
 use Flarum\Locale\LocaleManager;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class RegisterStringLoader
 {
@@ -28,7 +29,9 @@ class RegisterStringLoader
         foreach ($localeKeys as $locale) {
             // The resource does not actually contain any data,
             // it will be fetched from the database when the loader runs
-            $translator->addResource('fof_linguist', null, $locale);
+            // Flarum registers its translations in the ICU domain, so overrides must go there too
+            // or the translator formats them without ICU support
+            $translator->addResource('fof_linguist', null, $locale, 'messages'.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX);
         }
     }
 }
