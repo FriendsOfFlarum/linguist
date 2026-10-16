@@ -5,6 +5,7 @@ import Dropdown from "flarum/common/components/Dropdown";
 import Select from "flarum/common/components/Select";
 import Alert from "flarum/common/components/Alert";
 import LoadingModal from "flarum/admin/components/LoadingModal";
+import ClearCacheModal from "flarum/admin/components/ClearCacheModal";
 import extractText from "flarum/common/utils/extractText";
 import type Mithril from "mithril";
 
@@ -607,13 +608,8 @@ export default class StringsPage extends Component<IStringsPageAttrs> {
                     <Button
                         className="Button Button--link"
                         onclick={() => {
-                            // Same logic as in core StatusWidget
-                            app.modal.show(LoadingModal);
-
-                            app.request({
-                                method: "DELETE",
-                                url: app.forum.attribute("apiUrl") + "/cache",
-                            }).then(() => window.location.reload());
+                            // Core streams the clear as NDJSON, which app.request cannot parse
+                            app.modal.show(ClearCacheModal);
                         }}
                     >
                         {app.translator.trans(
