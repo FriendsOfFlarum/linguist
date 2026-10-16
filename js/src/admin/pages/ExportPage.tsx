@@ -1,5 +1,6 @@
 import app from "flarum/admin/app";
 import Component, { ComponentAttrs } from "flarum/common/Component";
+import Form from "flarum/common/components/Form";
 import Select from "flarum/common/components/Select";
 import Switch from "flarum/common/components/Switch";
 import LinkButton from "flarum/common/components/LinkButton";
@@ -67,103 +68,110 @@ export default class ExportPage extends Component<IExportPageAttrs> {
                 <h2>
                     {app.translator.trans("fof-linguist.admin.export.title")}
                 </h2>
-                <div className="Form-group">
-                    <div className="Alert">
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.warning",
-                        )}
+                <Form>
+                    <div className="Form-group">
+                        <div className="Alert">
+                            {app.translator.trans(
+                                "fof-linguist.admin.export.warning",
+                            )}
+                        </div>
                     </div>
-                </div>
-                <div className="Form-group">
-                    <label>
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.locale",
-                        )}
-                    </label>
-                    <Select
-                        options={localeOptions}
-                        value={this.locale}
-                        onchange={(value: string) => {
-                            this.locale = value;
-                            this.fetchOutput();
-                        }}
-                    />
-                </div>
-                <div className="Form-group">
-                    <label>
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.namespace",
-                        )}
-                    </label>
-                    <Select
-                        options={namespaceOptions}
-                        value={
-                            this.namespace === null ? "_all" : this.namespace
-                        }
-                        onchange={(value: string) => {
-                            this.namespace = value === "_all" ? null : value;
-                            this.fetchOutput();
-                        }}
-                    />
-                </div>
-                <div className="Form-group">
-                    <Switch
-                        state={this.includeOriginals}
-                        onchange={(value: boolean) => {
-                            this.includeOriginals = value;
-                            this.fetchOutput();
-                        }}
-                    >
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.include-originals",
-                        )}
-                    </Switch>
-                </div>
-                <div className="Form-group">
-                    <Switch
-                        state={this.includeAll}
-                        onchange={(value: boolean) => {
-                            this.includeAll = value;
-                            this.fetchOutput();
-                        }}
-                    >
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.include-all",
-                        )}
-                    </Switch>
-                </div>
-                <div className="Form-group">
-                    <label>
-                        {app.translator.trans(
-                            "fof-linguist.admin.export.output",
-                        )}{" "}
-                        <LinkButton
-                            className="Button Button--primary"
-                            href={this.exportUrl()}
-                            external={true}
-                            download={(this.namespace || this.locale) + ".yml"}
+                    <div className="Form-group">
+                        <label>
+                            {app.translator.trans(
+                                "fof-linguist.admin.export.locale",
+                            )}
+                        </label>
+                        <Select
+                            options={localeOptions}
+                            value={this.locale}
+                            onchange={(value: string) => {
+                                this.locale = value;
+                                this.fetchOutput();
+                            }}
+                        />
+                    </div>
+                    <div className="Form-group">
+                        <label>
+                            {app.translator.trans(
+                                "fof-linguist.admin.export.namespace",
+                            )}
+                        </label>
+                        <Select
+                            options={namespaceOptions}
+                            value={
+                                this.namespace === null
+                                    ? "_all"
+                                    : this.namespace
+                            }
+                            onchange={(value: string) => {
+                                this.namespace =
+                                    value === "_all" ? null : value;
+                                this.fetchOutput();
+                            }}
+                        />
+                    </div>
+                    <div className="Form-group">
+                        <Switch
+                            state={this.includeOriginals}
+                            onchange={(value: boolean) => {
+                                this.includeOriginals = value;
+                                this.fetchOutput();
+                            }}
                         >
                             {app.translator.trans(
-                                "fof-linguist.admin.export.download",
+                                "fof-linguist.admin.export.include-originals",
                             )}
-                        </LinkButton>
-                    </label>
-                    <textarea
-                        className="FormControl FoF-Export-Textarea"
-                        readonly={true}
-                        value={this.output}
-                        rows={10}
-                        placeholder={
-                            (this.loading
-                                ? app.translator.trans(
-                                      "fof-linguist.admin.export.output-loading",
-                                  )
-                                : app.translator.trans(
-                                      "fof-linguist.admin.export.output-empty",
-                                  )) as string
-                        }
-                    />
-                </div>
+                        </Switch>
+                    </div>
+                    <div className="Form-group">
+                        <Switch
+                            state={this.includeAll}
+                            onchange={(value: boolean) => {
+                                this.includeAll = value;
+                                this.fetchOutput();
+                            }}
+                        >
+                            {app.translator.trans(
+                                "fof-linguist.admin.export.include-all",
+                            )}
+                        </Switch>
+                    </div>
+                    <div className="Form-group">
+                        <label>
+                            {app.translator.trans(
+                                "fof-linguist.admin.export.output",
+                            )}{" "}
+                            <LinkButton
+                                className="Button Button--primary"
+                                href={this.exportUrl()}
+                                external={true}
+                                download={
+                                    (this.namespace || this.locale) + ".yml"
+                                }
+                            >
+                                {app.translator.trans(
+                                    "fof-linguist.admin.export.download",
+                                )}
+                            </LinkButton>
+                        </label>
+                        <textarea
+                            className="FormControl FoF-Export-Textarea"
+                            readonly={true}
+                            value={this.output}
+                            rows={10}
+                            placeholder={
+                                (this.loading
+                                    ? app.translator.trans(
+                                          "fof-linguist.admin.export.output-loading",
+                                      )
+                                    : app.translator.trans(
+                                          "fof-linguist.admin.export.output-empty",
+                                      )) as string
+                            }
+                        />
+                    </div>
+                </Form>
             </>
         );
     }
