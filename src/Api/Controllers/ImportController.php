@@ -50,12 +50,19 @@ class ImportController implements RequestHandlerInterface
         $totalImported = 0;
         $totalIgnored = 0;
         $totalIdentical = 0;
+        $totalEmpty = 0;
 
         foreach ($translations as $key => $value) {
             if (!is_string($key) || !Str::contains($key, '.')) {
                 throw new ValidationException([
                     'input' => 'Invalid translation key ' . $key,
                 ]);
+            }
+
+            // A key without a value means it has not been translated
+            if ($value === null || $value === '') {
+                $totalEmpty++;
+                continue;
             }
 
             $string = TextString::query()
@@ -92,6 +99,7 @@ class ImportController implements RequestHandlerInterface
             'imported' => $totalImported,
             'ignored' => $totalIgnored,
             'identical' => $totalIdentical,
+            'empty' => $totalEmpty,
         ]);
     }
 }
