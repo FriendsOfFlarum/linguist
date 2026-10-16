@@ -56,7 +56,7 @@ class TextStringResource extends AbstractDatabaseResource
                     $context->getActor()->assertAdmin();
                 })
                 ->after(function (Context $context, TextString $model) {
-                    $this->cacheStatus->translationWasModified($model->locale);
+                    $this->cacheStatus->translationWasModified();
 
                     return $model;
                 }),
@@ -67,7 +67,7 @@ class TextStringResource extends AbstractDatabaseResource
                     $context->getActor()->assertAdmin();
                 })
                 ->after(function (Context $context, TextString $model) {
-                    $this->cacheStatus->translationWasModified($model->locale);
+                    $this->cacheStatus->translationWasModified();
 
                     return $model;
                 }),
@@ -113,6 +113,6 @@ class TextStringResource extends AbstractDatabaseResource
         /** @var TextString $model */
         $model->delete();
 
-        $this->cacheStatus->translationWasModified($model->locale);
+        $this->cacheStatus->translationWasModified();
     }
 }

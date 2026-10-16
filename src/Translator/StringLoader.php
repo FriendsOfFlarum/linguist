@@ -43,8 +43,6 @@ class StringLoader implements LoaderInterface
         // The ICU formatter throws on invalid syntax, so these stay in the plain domain where they are output as written
         $catalog->add($plainMessages);
 
-        $catalog->addResource(new DatabaseResource($locale));
-
         return $catalog;
     }
 }
