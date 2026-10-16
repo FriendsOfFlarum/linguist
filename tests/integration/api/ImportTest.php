@@ -100,4 +100,16 @@ class ImportTest extends TestCase
         $this->assertSame(422, $response->getStatusCode());
         $this->assertSame([], $this->savedStrings());
     }
+
+    #[Test]
+    public function a_value_with_invalid_icu_syntax_rejects_the_whole_import(): void
+    {
+        $response = $this->import(<<<'YAML'
+            core.forum.index.all_discussions_link: Everything
+            core.forum.index.start_discussion_button: "Start a {discussion"
+            YAML);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $this->assertSame([], $this->savedStrings());
+    }
 }

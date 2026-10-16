@@ -6,6 +6,7 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use FoF\Linguist\Repositories\CacheStatusRepository;
 use FoF\Linguist\TextString;
+use FoF\Linguist\Translator\IcuSyntax;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -72,6 +73,12 @@ class ImportController implements RequestHandlerInterface
             if ($value !== null && !is_string($value) && !is_int($value) && !is_float($value)) {
                 throw new ValidationException([
                     'input' => 'Translation value must be text for key ' . $key,
+                ]);
+            }
+
+            if (is_string($value) && !IcuSyntax::isValid($value)) {
+                throw new ValidationException([
+                    'input' => 'Invalid ICU message syntax for key ' . $key,
                 ]);
             }
         }
