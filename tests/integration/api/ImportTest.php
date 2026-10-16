@@ -64,4 +64,18 @@ class ImportTest extends TestCase
 
         $this->assertSame(['core.forum.index.all_discussions_link' => 'Everything'], $this->savedStrings());
     }
+
+    #[Test]
+    public function a_key_longer_than_180_characters_rejects_the_whole_import(): void
+    {
+        $longKey = 'vendor-extension.forum.'.str_repeat('a', 158);
+
+        $response = $this->import(<<<YAML
+            core.forum.index.all_discussions_link: Everything
+            $longKey: Too long
+            YAML);
+
+        $this->assertSame(422, $response->getStatusCode());
+        $this->assertSame([], $this->savedStrings());
+    }
 }

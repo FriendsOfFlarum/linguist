@@ -17,6 +17,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class ImportController implements RequestHandlerInterface
 {
+    // Length of the key column
+    const MAX_KEY_LENGTH = 180;
+
     public function __construct(protected CacheStatusRepository $cacheStatus)
     {
     }
@@ -52,6 +55,7 @@ class ImportController implements RequestHandlerInterface
         $totalIdentical = 0;
         $totalEmpty = 0;
 
+        // Check every entry before saving any, so a bad entry cannot leave the import half done
         foreach ($translations as $key => $value) {
             if (!is_string($key) || !Str::contains($key, '.')) {
                 throw new ValidationException([
@@ -59,6 +63,14 @@ class ImportController implements RequestHandlerInterface
                 ]);
             }
 
+            if (mb_strlen($key) > self::MAX_KEY_LENGTH) {
+                throw new ValidationException([
+                    'input' => 'Translation key longer than ' . self::MAX_KEY_LENGTH . ' characters ' . $key,
+                ]);
+            }
+        }
+
+        foreach ($translations as $key => $value) {
             // A key without a value means it has not been translated
             if ($value === null || $value === '') {
                 $totalEmpty++;
