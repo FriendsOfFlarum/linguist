@@ -95,11 +95,11 @@ fof-linguist:
             submit: Import
             results: >
                 The import is finished.
-                {imported} strings have been imported and {identical} identical strings were skipped.
+                {imported} strings have been imported, and {identical} identical strings and {empty} empty strings were skipped.
                 The page will now refresh to show the new translations.
             results-with-ignore: >
                 The import is finished.
-                {imported} strings have been imported, {ignored} existing strings have been ignored and {identical} identical strings were skipped.
+                {imported} strings have been imported, {ignored} existing strings have been ignored, and {identical} identical strings and {empty} empty strings were skipped.
                 The page will now refresh to show the new translations.
         known-namespace:
             core: Flarum Core

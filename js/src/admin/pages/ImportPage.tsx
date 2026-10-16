@@ -12,6 +12,7 @@ interface ImportResult {
     imported: number;
     ignored: number;
     identical: number;
+    empty: number;
 }
 
 export default class ImportPage extends Component<ComponentAttrs> {
@@ -128,6 +129,7 @@ export default class ImportPage extends Component<ComponentAttrs> {
                                                             data.ignored + "",
                                                         identical:
                                                             data.identical + "",
+                                                        empty: data.empty + "",
                                                     },
                                                 ),
                                             ),
