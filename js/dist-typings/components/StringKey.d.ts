@@ -1,4 +1,3 @@
-/// <reference types="mithril" />
 import Component, { ComponentAttrs } from "flarum/common/Component";
 import type StringKeyModel from "../models/StringKey";
 export interface IStringKeyAttrs extends ComponentAttrs {
